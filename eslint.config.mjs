@@ -9,7 +9,6 @@ const eslintConfig = defineConfig([
         rules: {
             "no-console": "warn",
             "no-var": "error",
-            "semi": ["warn", "always"],
             "eqeqeq": ["error", "always"],
             "@next/next/no-img-element": "warn",
             "react/react-in-jsx-scope": "off",

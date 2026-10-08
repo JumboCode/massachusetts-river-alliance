@@ -1,0 +1,7 @@
+# Pre-push hook: typechecks the whole project before pushing.
+npm run typecheck || {
+  echo ""
+  echo "Push blocked: fix the TypeScript errors above, then push again."
+  echo "  npm run typecheck  -> re-run the check"
+  exit 1
+}
