@@ -35,21 +35,21 @@ export default function WeatherPage() {
   }
 
   return (
-    <div>
-      <button onClick={getWeather}>Get Weather</button>
+    <div style={{ backgroundColor: '#091948', minHeight: '100vh', width: '100%' }}>
+      <button  onClick={getWeather}><p style={{color: "lightblue", fontFamily: "times-new-roman", fontSize: "80px", cursor: "url('pngtree-summer-sun-clip-art-png-image_16237305.png'), pointer"}}>Get Weather</p></button>
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      {loading && <p style={{ color: "lightgreen", fontFamily: "times-new-roman" }}>Loading...</p>}
+      {error && <p style={{ color: "red", fontFamily: "times-new-roman" }}>Error: {error}</p>}
 
       {temperature !== null && wind !== null && (
         <div>
-          <p>Temperature: {temperature}°F</p>
-          <p>Wind: {wind} mph</p>
+          <p style={{ color: "green", fontFamily: "times-new-roman"}}>Temperature: {temperature}°F</p>
+          <p style={{ color: "teal", fontFamily: "times-new-roman" }}>Wind: {wind} mph</p>
         </div>
       )}
 
       {/* step 13: credit */}
-      <p>
+      <p style={{ color: "lightgreen", fontFamily: "times-new-roman" }}>
         Weather data by <a href="https://open-meteo.com/">Open-Meteo.com</a>
       </p>
     </div>
