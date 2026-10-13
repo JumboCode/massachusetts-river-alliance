@@ -1,3 +1,14 @@
+/***************************************************************
+ *
+ *                eslint.config.mjs
+ *
+ *         Author: Zander
+ *           Date: 10/6/2026
+ *
+ *        Summary: ESLint rules for the project
+ *
+ **************************************************************/
+
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import tseslint from "typescript-eslint";

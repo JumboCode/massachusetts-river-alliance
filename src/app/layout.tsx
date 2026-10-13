@@ -1,3 +1,14 @@
+/***************************************************************
+ *
+ *                src/app/layout.tsx
+ *
+ *         Author: Zander
+ *           Date: 10/6/2026
+ *
+ *        Summary: Root layout, loads the Inter font and global styles
+ *
+ **************************************************************/
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

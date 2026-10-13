@@ -1,3 +1,14 @@
+/***************************************************************
+ *
+ *                src/app/globals.css
+ *
+ *         Author: Zander
+ *           Date: 10/6/2026
+ *
+ *        Summary: Global styles and Tailwind theme
+ *
+ **************************************************************/
+
 @import "tailwindcss";
 
 :root {

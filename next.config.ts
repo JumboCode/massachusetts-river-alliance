@@ -1,3 +1,14 @@
+/***************************************************************
+ *
+ *                next.config.ts
+ *
+ *         Author: Zander
+ *           Date: 10/6/2026
+ *
+ *        Summary: Next.js config
+ *
+ **************************************************************/
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
