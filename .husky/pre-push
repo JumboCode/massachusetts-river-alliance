@@ -1,4 +1,11 @@
-# Pre-push hook: typechecks the whole project before pushing.
+# Pre-push hook: blocks direct pushes to main, then typechecks the project.
+while read -r _ _ remote_ref _; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "Push blocked: don't push to main. Push your branch and open a PR."
+    echo "  git switch -c feature/<name>   then   git push -u origin feature/<name>"
+    exit 1
+  fi
+done
 npm run typecheck || {
   echo ""
   echo "Push blocked: fix the TypeScript errors above, then push again."
