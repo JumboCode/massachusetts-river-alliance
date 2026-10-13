@@ -4,22 +4,19 @@ import "./globals.css";
 
 // Figma designs use Inter (400/500/600); Inter is a variable font, so all weights load.
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+    variable: "--font-inter",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Massachusetts Rivers Alliance",
-  description: "Massachusetts Rivers Alliance",
+    title: "Massachusetts Rivers Alliance",
+    description: "Massachusetts Rivers Alliance",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="en"
-      className={`${inter.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+    return (
+        <html lang="en" className={`${inter.variable} h-full antialiased`}>
+            <body className="min-h-full flex flex-col">{children}</body>
+        </html>
+    );
 }
