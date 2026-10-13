@@ -1,0 +1,8 @@
+# Pre-commit hook: lints staged files (no auto-fix) and formats them with Prettier.
+npx lint-staged || {
+  echo ""
+  echo "Commit blocked. Fix the errors/warnings above, then commit again."
+  echo "  npm run lint      -> see all problems"
+  echo "  npm run lint:fix  -> auto-fix what ESLint can (review the changes!)"
+  exit 1
+}

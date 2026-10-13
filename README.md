@@ -10,15 +10,26 @@ Designer: Ginny Dong
 
 Coming soon.
 
-## How to run
+## Prerequisites
 
-First, run the development server:
+- **Node.js 24 (LTS):** download from [nodejs.org](https://nodejs.org). Check with `node -v`.
+
+## Setup
 
 ```
+git clone git@github.com:JumboCode/massachusetts-river-alliance.git
+cd massachusetts-river-alliance
+npm install
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the site.
+
+## Reminders
+
+- Always `git pull` on `main` before making a new branch.
+- Name branches `[topic]/[feature]`, e.g. `feature/submit-form` or `fix/map-zoom`.
+- Run `npm install` after pulling if `package.json` changed.
 
 ## Git Commands Guide
 
@@ -26,8 +37,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ```
 git branch                      # see current branch
-git checkout [branch-name]      # switch branches
-git checkout -b branch-name     # makes new branch and switches to that branch
+git switch [branch-name]        # switch branches
+git switch -c [branch-name]     # makes new branch and switches to that branch
 ```
 
 ### Development
