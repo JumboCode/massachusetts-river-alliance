@@ -5,18 +5,25 @@
  *         Author: Zander
  *           Date: 10/6/2026
  *
- *        Summary: Root layout, loads the Inter font and global styles
+ *        Summary: Root layout, loads fonts and global styles
  *
  **************************************************************/
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 
-// Figma designs use Inter (400/500/600); Inter is a variable font, so all weights load.
+// Body font. Figma uses Avenir, which isn't free, so Inter stands in.
 const inter = Inter({
     variable: "--font-inter",
     subsets: ["latin"],
+});
+
+// Heading font from the Figma hi-fi.
+const montserrat = Montserrat({
+    variable: "--font-montserrat",
+    subsets: ["latin"],
+    weight: "700",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +33,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
-        <html lang="en" className={`${inter.variable} h-full antialiased`}>
+        <html
+            lang="en"
+            className={`${inter.variable} ${montserrat.variable} h-full font-sans antialiased`}
+        >
             <body className="min-h-full flex flex-col">{children}</body>
         </html>
     );

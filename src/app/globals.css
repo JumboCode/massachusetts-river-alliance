@@ -5,31 +5,25 @@
  *         Author: Zander
  *           Date: 10/6/2026
  *
- *        Summary: Global styles and Tailwind theme
+ *        Summary: Global styles and the colors and fonts from the Figma hi-fi
  *
  **************************************************************/
 
 @import "tailwindcss";
 
-:root {
-    --background: #ffffff;
-    --foreground: #171717;
-}
-
+/* Colors and fonts from the Figma hi-fi. Use them as classes: bg-primary, text-label, font-heading... */
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
+    --color-background: #e7ecef; /* page background */
+    --color-foreground: #1a2c37; /* body text */
+    --color-primary: #5fa8d3; /* buttons */
+    --color-input: #829cbc; /* input borders, button hover */
+    --color-label: #404f5a; /* field labels */
+    --color-muted-foreground: #6d808c; /* placeholders, small links */
+    --color-destructive: #ea7e7e; /* errors, required * */
     --font-sans: var(--font-inter);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+    --font-heading: var(--font-montserrat);
 }
 
 body {
-    background: var(--background);
-    color: var(--foreground);
+    @apply bg-background text-foreground;
 }
