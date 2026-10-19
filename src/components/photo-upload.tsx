@@ -9,8 +9,8 @@
  *
  **************************************************************/
 
-import { useState } from "react";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { type ChangeEvent, useState } from "react";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
 
@@ -25,6 +25,25 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
     const [error, setError] = useState<string | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+    function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0] ?? null;
+        if (file && file.size > MAX_PHOTO_SIZE_BYTES) {
+            e.currentTarget.value = "";
+            onChange(null);
+            setError("Photo must be 10 MB or smaller.");
+            return;
+        }
+
+        setError(null);
+        onChange(file);
+        if (!file) {
+            setPreviewUrl(null);
+            return;
+        }
+
+        setPreviewUrl(URL.createObjectURL(file));
+    }
+
     return (
         <Field>
             <FieldLabel htmlFor="photo">PHOTO (OPTIONAL)</FieldLabel>
@@ -33,24 +52,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 id="photo"
                 type="file"
                 accept="image/jpeg,image/png"
-                onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    if (file && file.size > MAX_PHOTO_SIZE_BYTES) {
-                        e.currentTarget.value = "";
-                        onChange(null);
-                        setError("Photo must be 10 MB or smaller.");
-                        return;
-                    }
-
-                    setError(null);
-                    onChange(file);
-                    if (!file) {
-                        setPreviewUrl(null);
-                        return;
-                    }
-
-                    setPreviewUrl(URL.createObjectURL(file));
-                }}
+                onChange={handlePhotoChange}
             />
             {value ? (
                 <div className="relative flex h-30 w-full items-center justify-center overflow-hidden rounded-md border border-input">
@@ -64,6 +66,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                     )}
                     <button
                         className="absolute right-2 top-2 flex size-7 cursor-pointer items-center justify-center rounded-full bg-label/20"
+                        type="button"
                         onClick={() => {
                             if (previewUrl !== null) {
                                 document
@@ -87,7 +90,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                     <span className="text-label">Add a photo</span>
                 </label>
             )}
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <FieldError>{error}</FieldError>}
         </Field>
     );
 }
