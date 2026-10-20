@@ -43,10 +43,6 @@ export default function ForgotPasswordPage() {
             return;
         }
 
-        //Technically not wrong but not explicitly stated in design spec,
-        //if they want us to implement it then just uncomment it below but
-        //i think they just want us to follow the spec as closely as possible
-
         // tests to see if email provided fits regular email formatting
         // if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
         //     setError("Enter a valid email address");
@@ -94,17 +90,6 @@ export default function ForgotPasswordPage() {
 
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
-                    {/* changed original (below) to use built in instead of 
-                    overriding with custom className, since it is already built in to the component
-                    and changed email to caps like in figma                 
-                    
-                    <FieldLabel
-                        htmlFor="email"
-                        className="text-xs uppercase tracking-wider text-label"
-                    >
-                        Email <span className="text-destructive">*</span>
-                    </FieldLabel> */}
-
                     <FieldLabel htmlFor="email" required>
                         EMAIL
                     </FieldLabel>
@@ -125,15 +110,6 @@ export default function ForgotPasswordPage() {
 
                 <div className="mt-6 flex flex-col items-center gap-1">
                     {/* Submit Button */}
-                    {/*  changed original (below) to use built in components
-                    
-                    <Button
-                        type="submit"
-                        className="bg-primary hover:bg-input text-white"
-                    >
-                        Send Reset Link
-                    </Button> */}
-
                     <Button type="submit">Send Reset Link</Button>
                     {/* Link back to login page */}
                     <TextLink href="/login">Back to Login</TextLink>
