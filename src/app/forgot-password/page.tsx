@@ -7,6 +7,8 @@
  *
  *      Edited by: Bethiah
  *           Date: 10/18/2026
+ *      Edited by: Michele
+ *           Date: 10/20/2026
  *
  *        Summary: Forgot password page
  *
