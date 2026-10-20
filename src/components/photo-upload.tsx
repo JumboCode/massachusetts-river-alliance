@@ -9,7 +9,7 @@
  *
  **************************************************************/
 
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -24,31 +24,41 @@ type PhotoUploadProps = {
 export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
     const [error, setError] = useState<string | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    function showPreview(file: File | null) {
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(file ? URL.createObjectURL(file) : null);
+    }
 
     function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0] ?? null;
         if (file && file.size > MAX_PHOTO_SIZE_BYTES) {
             e.currentTarget.value = "";
             onChange(null);
+            showPreview(null);
             setError("Photo must be 10 MB or smaller.");
             return;
         }
 
         setError(null);
         onChange(file);
-        if (!file) {
-            setPreviewUrl(null);
-            return;
-        }
+        showPreview(file);
+    }
 
-        setPreviewUrl(URL.createObjectURL(file));
+    function handleRemove() {
+        if (inputRef.current) inputRef.current.value = "";
+        showPreview(null);
+        setError(null);
+        onChange(null);
     }
 
     return (
         <Field>
             <FieldLabel htmlFor="photo">PHOTO (OPTIONAL)</FieldLabel>
             <input
-                className="hidden"
+                ref={inputRef}
+                className="peer sr-only"
                 id="photo"
                 type="file"
                 accept="image/jpeg,image/png"
@@ -67,23 +77,15 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                     <button
                         className="absolute right-2 top-2 flex size-7 cursor-pointer items-center justify-center rounded-full bg-label/20"
                         type="button"
-                        onClick={() => {
-                            if (previewUrl !== null) {
-                                document
-                                    .getElementById("photo")
-                                    ?.setAttribute("value", "");
-                            }
-                            setPreviewUrl(null);
-                            setError(null);
-                            onChange(null);
-                        }}
+                        aria-label="Remove photo"
+                        onClick={handleRemove}
                     >
                         <X size={16} />
                     </button>
                 </div>
             ) : (
                 <label
-                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-sm underline"
+                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-sm underline peer-focus-visible:ring-3 peer-focus-visible:ring-primary/50"
                     htmlFor="photo"
                 >
                     <Upload size={35} className="text-label" />
