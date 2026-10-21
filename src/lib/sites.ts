@@ -22,9 +22,3 @@ export const SITES: Site[] = [
     { id: "neponset", name: "Neponset River at Milton" },
     { id: "taunton", name: "Taunton River at Bridgewater" },
 ];
-
-// Mystic River at Medford
-// Charles River at Waltham
-// Nashua River at Groton
-// Neponset River at Milton
-// Taunton River at Bridgewater

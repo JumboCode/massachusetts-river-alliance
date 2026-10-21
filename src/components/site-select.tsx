@@ -9,9 +9,10 @@
  *
  **************************************************************/
 
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
 import { SITES } from "@/lib/sites";
+import { TextLink } from "@/components/text-link";
 
 type SiteSelectProps = {
     value: string; // the selected site's id, "" when none
@@ -39,18 +40,18 @@ export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
                 ))}
             </NativeSelect>
             {error && (
-                <FieldLabel className="font-arial text-[11px] leading-none tracking-[0.08em]">
+                <FieldError className="font-inter text-[11px] leading-none tracking-[0.08em]">
                     {error}
-                </FieldLabel>
+                </FieldError>
             )}
-            <a
+            <TextLink
                 href="https://www.arcgis.com/apps/mapviewer/index.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-fit font-sans text-xs underline"
+                className="w-fit font-inter"
             >
                 Choose a site on the ArcGIS map
-            </a>
+            </TextLink>
         </Field>
     );
 }
