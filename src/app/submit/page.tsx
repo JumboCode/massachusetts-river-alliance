@@ -35,17 +35,17 @@ export default function SubmitPage() {
     const [notes, setNotes] = useState("");
     const [submission, setSubmission] = useState<Measurement | null>(null);
     const [siteError, setSiteError] = useState("");
-    const [gageError, setGageError] = useState(false);
+    const [gageError, setGageError] = useState("");
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (site === "") {
-            setSiteError("No site selected");
-        }
-        if (gageHeight === "") {
-            setGageError(true);
-        } else {
-            setGageError(false);
+        const siteMissing = site === "";
+        const gageMissing = gageHeight === "";
+        setSiteError(siteMissing ? "This field is required" : "");
+        setGageError(gageMissing ? "This field is required" : "");
+        if (siteMissing || gageMissing) {
+            setSubmission(null);
+            return;
         }
 
         setSubmission({
@@ -82,28 +82,21 @@ export default function SubmitPage() {
                         error={siteError}
                     />
                     <Field>
-                        <FieldLabel htmlFor="site" required>
+                        <FieldLabel htmlFor="gage-height" required>
                             GAGE HEIGHT (ft)
                         </FieldLabel>
-                        {gageError ? (
-                            <Input
-                                className="border-red-500"
-                                id="gage-height"
-                                type="number"
-                                step="0.01"
-                                placeholder="This field is required"
-                                value={gageHeight}
-                                onChange={(e) => setGageHeight(e.target.value)}
-                            />
-                        ) : (
-                            <Input
-                                id="gage-height"
-                                type="number"
-                                step="0.01"
-                                placeholder="e.g. 4.82"
-                                value={gageHeight}
-                                onChange={(e) => setGageHeight(e.target.value)}
-                            />
+
+                        <Input
+                            id="gage-height"
+                            type="number"
+                            step="0.01"
+                            placeholder="e.g. 4.82"
+                            value={gageHeight}
+                            aria-invalid={!!gageError}
+                            onChange={(e) => setGageHeight(e.target.value)}
+                        />
+                        {gageError && (
+                            <p className="text-[14px]">{gageError}</p>
                         )}
                     </Field>
                     <Field>
