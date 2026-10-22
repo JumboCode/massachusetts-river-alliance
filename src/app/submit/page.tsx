@@ -16,7 +16,7 @@ import { FormCard } from "@/components/form-card";
 import { PhotoUpload } from "@/components/photo-upload";
 import { SiteSelect } from "@/components/site-select";
 import { Input } from "@/components/ui/input";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { SITES } from "@/lib/sites";
 import Image from "next/image";
@@ -95,9 +95,7 @@ export default function SubmitPage() {
                             aria-invalid={!!gageError}
                             onChange={(e) => setGageHeight(e.target.value)}
                         />
-                        {gageError && (
-                            <p className="text-[14px]">{gageError}</p>
-                        )}
+                        {gageError && <FieldError>{gageError}</FieldError>}
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="notes">
