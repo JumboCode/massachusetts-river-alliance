@@ -2,15 +2,17 @@
  *
  *                src/components/site-select.tsx
  *
- *         Author: Zander
- *           Date: 10/14/2026
+ *         Author: Vienna, Helen
+ *           Date: 10/16/2026
  *
  *        Summary: Dropdown for picking a monitoring site
  *
  **************************************************************/
 
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
+import { SITES } from "@/lib/sites";
+import { TextLink } from "@/components/text-link";
 
 type SiteSelectProps = {
     value: string; // the selected site's id, "" when none
@@ -18,7 +20,7 @@ type SiteSelectProps = {
     error?: string; // shown under the dropdown when set
 };
 
-export function SiteSelect({ value, onChange }: SiteSelectProps) {
+export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
     return (
         <Field>
             <FieldLabel htmlFor="site" required>
@@ -28,9 +30,24 @@ export function SiteSelect({ value, onChange }: SiteSelectProps) {
                 id="site"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
+                aria-invalid={!!error}
             >
                 <option value="">Select a Monitor Site</option>
+                {SITES.map((site) => (
+                    <option key={site.id} value={site.id}>
+                        {site.name}
+                    </option>
+                ))}
             </NativeSelect>
+            {error && <FieldError>{error}</FieldError>}
+            <TextLink
+                href="https://www.arcgis.com/apps/mapviewer/index.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit"
+            >
+                Choose a site on the ArcGIS map
+            </TextLink>
         </Field>
     );
 }
