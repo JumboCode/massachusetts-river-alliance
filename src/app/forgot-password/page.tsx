@@ -18,8 +18,7 @@
 
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
-//for when image is used in the future (better to use <Image> over <img> because next handles the sizing and loading)
-// import Image from "next/image";
+import Image from "next/image";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TextLink } from "@/components/text-link";
@@ -43,28 +42,21 @@ export default function ForgotPasswordPage() {
             return;
         }
 
-        // tests to see if email provided fits regular email formatting
-        // if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
-        //     setError("Enter a valid email address");
-        //     return;
-        // }
-
         setError("");
         setSent(true);
     }
 
     // email set state
-    //includes commented out section for image when it is approved
     if (sent) {
         return (
             <FormCard>
                 <div className="flex flex-col items-center gap-6">
-                    {/* <Image
-                            src="/logo-waves.png"
-                            alt="Massachusetts River Alliance logo"
-                            width={100}
-                            height={47}
-                    /> */}
+                    <Image
+                        src="/logo-waves.png"
+                        alt="Massachusetts River Alliance logo"
+                        width={100}
+                        height={47}
+                    />
                     <p className="text-center text-sm">
                         If an account exists for that email, we&apos;ve sent a
                         reset link.
@@ -75,19 +67,19 @@ export default function ForgotPasswordPage() {
         );
     }
 
-    //includes commented out section for image when it is approved
     return (
         <FormCard>
-            {/* <Image
-                            src="/logo-waves.png"
-                            alt="Massachusetts River Alliance logo"
-                            width={100}
-                            height={47}
-                    /> */}
-            <h1 className="font-heading text-center text-2xl tracking-wide">
-                Forgot Password
-            </h1>
-
+            <div className="flex flex-col items-center gap-2">
+                <Image
+                    src="/logo-waves.png"
+                    alt="Massachusetts River Alliance logo"
+                    width={100}
+                    height={47}
+                />
+                <h1 className="font-heading text-center text-[32px] font-bold tracking-[0.08em]">
+                    Forgot Password
+                </h1>
+            </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
                     <FieldLabel htmlFor="email" required>
