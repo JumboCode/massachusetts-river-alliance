@@ -39,16 +39,12 @@ export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
                     </option>
                 ))}
             </NativeSelect>
-            {error && (
-                <FieldError className="font-inter text-[11px] leading-none tracking-[0.08em]">
-                    {error}
-                </FieldError>
-            )}
+            {error && <FieldError>{error}</FieldError>}
             <TextLink
                 href="https://www.arcgis.com/apps/mapviewer/index.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-fit font-inter"
+                className="w-fit"
             >
                 Choose a site on the ArcGIS map
             </TextLink>
