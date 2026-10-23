@@ -36,123 +36,73 @@ export default function LoginPage() {
 
     return (
         <FormCard>
-            <form onSubmit={handleSubmit} noValidate>
+            <form
+                onSubmit={handleSubmit}
+                noValidate
+                className="flex flex-col gap-7.5"
+            >
                 {/* Image and header */}
+                <div className="flex flex-col items-center gap-2.5">
+                    <Image
+                        src="/logo-waves.png"
+                        alt="Logo"
+                        width={235}
+                        height={110}
+                        loading="eager"
+                        sizes="(max-width: 235px) 100vw, 235px"
+                        className="w-full h-auto max-w-[235px]"
+                    />
 
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "30px",
-                        height: "515px",
-                        padding: "40px",
-                        borderRadius: "10px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: "10px",
-                        }}
-                    >
-                        <Image
-                            src="/logo-waves.png"
-                            alt="Logo"
-                            width={235}
-                            height={110}
-                            loading="eager"
-                            sizes="(max-width: 235px) 100vw, 235px"
-                            style={{
-                                width: "100%",
-                                height: "auto",
-                                maxWidth: "235px",
-                            }}
-                        />
+                    <h1 className="font-heading h-[49px] font-bold text-[40px] leading-[100%] tracking-[0.08em] text-center">
+                        Admin Login
+                    </h1>
+                </div>
 
-                        <h1
-                            className="font-heading"
-                            style={{
-                                height: "49px",
-                                fontWeight: 700,
-                                fontSize: "40px",
-                                lineHeight: "100%",
-                                letterSpacing: "0.08em",
-                                textAlign: "center",
-                                color: "#000000",
-                            }}
-                        >
-                            Admin Login
-                        </h1>
-                    </div>
+                {/* Email and password */}
+                <div className="flex flex-col gap-4">
+                    <Field>
+                        <FieldLabel htmlFor="email-input" required>
+                            Email
+                        </FieldLabel>
+                        <Input
+                            id="email-input"
+                            value={email}
+                            type="email"
+                            placeholder="Enter Email Address"
+                            onChange={(e) => setEmail(e.target.value)}
+                            aria-invalid={!!emailError}
+                        ></Input>
+                        {emailError && <FieldError>{emailError}</FieldError>}
+                    </Field>
 
-                    {/* Email and password */}
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "16px",
-                        }}
-                    >
-                        <Field>
-                            <FieldLabel htmlFor="email-input" required>
-                                Email
-                            </FieldLabel>
+                    <Field>
+                        <FieldLabel htmlFor="password-input" required>
+                            Password
+                        </FieldLabel>
+                        <Input
+                            id="password-input"
+                            value={password}
+                            type="password"
+                            placeholder="Enter Password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            aria-invalid={!!passwordError}
+                        ></Input>
+                        {passwordError && (
+                            <FieldError>{passwordError}</FieldError>
+                        )}
+                    </Field>
+                    {/* Login button and forgot password link */}
+                    <div className="flex flex-col items-center gap-4">
+                        <Button type="submit" className="w-full">
+                            Login
+                        </Button>
 
-                            <Input
-                                id="email-input"
-                                value={email}
-                                type="email"
-                                placeholder="Enter Email Address"
-                                onChange={(e) => setEmail(e.target.value)}
-                                aria-invalid={!!emailError}
-                            ></Input>
-                            {emailError && (
-                                <FieldError>{emailError}</FieldError>
-                            )}
-                        </Field>
-
-                        <Field>
-                            <FieldLabel htmlFor="password-input" required>
-                                Password
-                            </FieldLabel>
-
-                            <Input
-                                id="password-input"
-                                value={password}
-                                type="password"
-                                placeholder="Enter Password"
-                                onChange={(e) => setPassword(e.target.value)}
-                                aria-invalid={!!passwordError}
-                            ></Input>
-                            {passwordError && (
-                                <FieldError>{passwordError}</FieldError>
-                            )}
-                        </Field>
-                        {/* Login button and forgot password link */}
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                gap: "16px",
-                                width: "420px",
-                            }}
-                        >
-                            <Button type="submit" className="w-full">
-                                Login
-                            </Button>
-
-                            {loggedIn && (
-                                <p className="text-green-600">Logged in!</p>
-                            )}
-
-                            <TextLink href="/forgot-password">
-                                Forgot Password?
-                            </TextLink>
-                        </div>
+                        {loggedIn && (
+                            <p className="text-green-600">Logged in!</p>
+                        )}
+                        <TextLink href="/forgot-password">
+                            Forgot Password?
+                        </TextLink>
                     </div>
                 </div>
             </form>
