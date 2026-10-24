@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
                 <div className="flex flex-col items-center gap-6">
                     <Image
                         src="/logo-waves.png"
-                        alt="Massachusetts River Alliance logo"
+                        alt="Massachusetts Rivers Alliance logo"
                         width={100}
                         height={47}
                     />
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
             <div className="flex flex-col items-center gap-2">
                 <Image
                     src="/logo-waves.png"
-                    alt="Massachusetts River Alliance logo"
+                    alt="Massachusetts Rivers Alliance logo"
                     width={100}
                     height={47}
                 />
