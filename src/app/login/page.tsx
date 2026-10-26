@@ -29,9 +29,10 @@ export default function LoginPage() {
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        setEmailError(email === "" ? "This field is required" : "");
+        const trimmedEmail = email.trim();
+        setEmailError(trimmedEmail === "" ? "This field is required" : "");
         setPasswordError(password === "" ? "This field is required" : "");
-        setLoggedIn(email !== "" && password !== "");
+        setLoggedIn(trimmedEmail !== "" && password !== "");
     }
 
     return (
@@ -53,7 +54,7 @@ export default function LoginPage() {
                         className="w-full h-auto max-w-[235px]"
                     />
 
-                    <h1 className="font-heading h-[49px] font-bold text-[40px] leading-[100%] tracking-[0.08em] text-center">
+                    <h1 className="font-heading font-bold text-[40px] leading-[100%] tracking-[0.08em] text-center">
                         Admin Login
                     </h1>
                 </div>
