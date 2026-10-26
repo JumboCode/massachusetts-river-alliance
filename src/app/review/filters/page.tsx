@@ -61,7 +61,7 @@ const SUBMISSIONS = [
 
 export default function ReviewFiltersPage() {
     const [site, setSite] = useState("allsites");
-    const [date, setDate] = useState("alltime");
+    const [date, setDate] = useState("7");
     const [status, setStatus] = useState("allstatuses");
     const [shown, setShown] = useState(SUBMISSIONS);
 
@@ -114,8 +114,8 @@ export default function ReviewFiltersPage() {
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                     >
-                        <option value="alltime">All times</option>
                         <option value="7">Last 7 days</option>
+                        <option value="alltime">All times</option>
                         <option value="30">Last 30 days</option>
                     </NativeSelect>
                 </Field>
