@@ -2,7 +2,7 @@
  *
  *                src/app/review/filters/page.tsx
  *
- *         Author: Zander
+ *         Author: Zander, Will, Caitlyn
  *           Date: 10/22/2026
  *
  *        Summary: Filters for reviewing submissions
