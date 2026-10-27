@@ -2,8 +2,8 @@
  *
  *                src/app/submit/page.tsx
  *
- *         Author: Will and Micah
- *           Date: 10/14/2026
+ *         Author: Will, Micah, Vienna, Michele
+ *           Date: 10/27/2026
  *
  *        Summary: Volunteer form for submitting a gage height measurement
  *
@@ -15,9 +15,11 @@ import { useState } from "react";
 import { FormCard } from "@/components/form-card";
 import { PhotoUpload } from "@/components/photo-upload";
 import { SiteSelect } from "@/components/site-select";
+import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { SITES } from "@/lib/sites";
 import Image from "next/image";
 
@@ -25,6 +27,8 @@ export default function SubmitPage() {
     type Measurement = {
         siteId: string;
         gageHeight: number;
+        weather: string;
+        conditions: string;
         notes: string;
         photo: File | null;
     };
@@ -32,6 +36,8 @@ export default function SubmitPage() {
     const [site, setSite] = useState("");
     const [photo, setPhoto] = useState<File | null>(null);
     const [gageHeight, setGageHeight] = useState("");
+    const [weather, setWeather] = useState("");
+    const [conditions, setConditions] = useState("");
     const [notes, setNotes] = useState("");
     const [submission, setSubmission] = useState<Measurement | null>(null);
     const [siteError, setSiteError] = useState("");
@@ -51,6 +57,8 @@ export default function SubmitPage() {
         setSubmission({
             siteId: site,
             gageHeight: Number(gageHeight),
+            weather: weather,
+            conditions: conditions,
             notes: notes,
             photo: photo,
         });
@@ -98,6 +106,35 @@ export default function SubmitPage() {
                         {gageError && <FieldError>{gageError}</FieldError>}
                     </Field>
                     <Field>
+                        <FieldLabel htmlFor="weather-select">
+                            WEATHER (OPTIONAL)
+                        </FieldLabel>
+                        <NativeSelect
+                            id="weather-select"
+                            value={weather}
+                            onChange={(e) => setWeather(e.target.value)}
+                        >
+                            <option value="">Select Weather</option>
+                            <option value="Rainy">Rainy</option>
+                            <option value="Sunny">Sunny</option>
+                            <option value="Cloudy">Cloudy</option>
+                            <option value="Foggy">Foggy</option>
+                            <option value="Snowy">Snowy</option>
+                        </NativeSelect>
+                    </Field>
+                    <Field>
+                        <FieldLabel htmlFor="conditions">
+                            STREAM CONDITIONS AND OBSERVATIONS (OPTIONAL)
+                        </FieldLabel>
+                        <Textarea
+                            id="conditions"
+                            value={conditions}
+                            placeholder="Add context about stream conditions"
+                            onChange={(e) => setConditions(e.target.value)}
+                        />
+                    </Field>
+
+                    <Field>
                         <FieldLabel htmlFor="notes">
                             NOTES (OPTIONAL)
                         </FieldLabel>
@@ -125,6 +162,7 @@ export default function SubmitPage() {
                         {SITES.find((s) => s.id === submission.siteId)?.name}
                     </p>
                     <p>Gage Height: {submission.gageHeight}</p>
+                    <p>Weather: {submission.weather}</p>
                     <p>Notes: {submission.notes}</p>
                     <p>Photo file: {submission.photo?.name}</p>
                 </div>
