@@ -163,6 +163,7 @@ export default function SubmitPage() {
                     </p>
                     <p>Gage Height: {submission.gageHeight}</p>
                     <p>Weather: {submission.weather}</p>
+                    <p>Stream Conditions: {submission.conditions}</p>
                     <p>Notes: {submission.notes}</p>
                     <p>Photo file: {submission.photo?.name}</p>
                 </div>
