@@ -55,7 +55,6 @@ export default function SubmitPage() {
     const [nameError, setNameError] = useState("");
     const [emailError, setEmailError] = useState("");
 
-    //use volunteer clock
     useEffect(() => {
         setDate(new Date().toLocaleDateString("en-CA"));
         setTime(new Date().toTimeString().slice(0, 5));
@@ -250,7 +249,6 @@ export default function SubmitPage() {
                     </Button>
                 </div>
             </form>
-            {/* already sets submission to null when field is missing */}
             {submission && (
                 <div className="text-[14px]">
                     <p>Monitor Name: {submission.monitorName}</p>
