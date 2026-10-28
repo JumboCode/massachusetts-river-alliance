@@ -11,7 +11,7 @@
 "use client";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { NativeSelect } from "@/components/ui/native-select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SITES } from "@/lib/sites";
 
 const SUBMISSIONS = [
@@ -63,18 +63,13 @@ export default function ReviewFiltersPage() {
     const [site, setSite] = useState("allsites");
     const [date, setDate] = useState("7");
     const [status, setStatus] = useState("allstatuses");
-    const [shown, setShown] = useState(SUBMISSIONS);
 
-    useEffect(() => {
-        setShown(
-            SUBMISSIONS.filter(
-                (s) =>
-                    (status === "allstatuses" || s.status === status) &&
-                    (date === "alltime" || s.daysAgo <= parseInt(date)) &&
-                    (site === "allsites" || s.siteId === site),
-            ),
-        );
-    }, [site, date, status]);
+    const shown = SUBMISSIONS.filter(
+        (s) =>
+            (status === "allstatuses" || s.status === status) &&
+            (date === "alltime" || s.daysAgo <= parseInt(date)) &&
+            (site === "allsites" || s.siteId === site),
+    );
 
     return (
         <div>
