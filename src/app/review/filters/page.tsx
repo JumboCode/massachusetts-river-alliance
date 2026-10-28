@@ -73,20 +73,11 @@ export default function ReviewFiltersPage() {
 
     return (
         <div>
-            <h1 className="font-heading text-xl">Submission Review</h1>
-            {shown.map((s) => (
-                <p key={s.id}>
-                    {SITES.find((site) => site.id === s.siteId)?.name} |{" "}
-                    {s.gageHeight} ft | {s.status} | {s.daysAgo} days ago
-                </p>
-            ))}
-            {shown.length === 0 && <p>No submissions match these filters</p>}
+            <h1 className="font-heading text-xl">Submission review</h1>
 
             <div className="flex flex-row gap-2">
                 <Field>
-                    <FieldLabel htmlFor="site" required>
-                        SITE
-                    </FieldLabel>
+                    <FieldLabel htmlFor="site">SITE</FieldLabel>
                     <NativeSelect
                         id="site"
                         value={site}
@@ -101,23 +92,19 @@ export default function ReviewFiltersPage() {
                     </NativeSelect>
                 </Field>
                 <Field>
-                    <FieldLabel htmlFor="date" required>
-                        DATE
-                    </FieldLabel>
+                    <FieldLabel htmlFor="date">DATE</FieldLabel>
                     <NativeSelect
                         id="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                     >
                         <option value="7">Last 7 days</option>
-                        <option value="alltime">All times</option>
                         <option value="30">Last 30 days</option>
+                        <option value="alltime">All time</option>
                     </NativeSelect>
                 </Field>
                 <Field>
-                    <FieldLabel htmlFor="status" required>
-                        STATUS
-                    </FieldLabel>
+                    <FieldLabel htmlFor="status">STATUS</FieldLabel>
                     <NativeSelect
                         id="status"
                         value={status}
@@ -130,6 +117,14 @@ export default function ReviewFiltersPage() {
                     </NativeSelect>
                 </Field>
             </div>
+
+            {shown.map((s) => (
+                <p key={s.id}>
+                    {SITES.find((site) => site.id === s.siteId)?.name} |{" "}
+                    {s.gageHeight} ft | {s.status} | {s.daysAgo} days ago
+                </p>
+            ))}
+            {shown.length === 0 && <p>No submissions match these filters</p>}
         </div>
     );
 }
