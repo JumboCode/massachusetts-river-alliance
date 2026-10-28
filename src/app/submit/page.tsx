@@ -205,7 +205,6 @@ export default function SubmitPage() {
                             value={weather}
                             onChange={(e) => setWeather(e.target.value)}
                         >
-                            {/* <!--replaced with readme's options--> */}
                             <option value="">Select weather</option>
                             <option value="Sunny">Sunny</option>
                             <option value="Partly cloudy">Partly cloudy</option>
@@ -218,7 +217,7 @@ export default function SubmitPage() {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="conditions">
-                            STREAM CONDITIONS AND OBSERVATIONS (OPTIONAL)
+                            STREAM CONDITIONS & OBSERVATIONS (OPTIONAL)
                         </FieldLabel>
                         <Textarea
                             id="conditions"
