@@ -2,8 +2,8 @@
  *
  *                src/app/submit/page.tsx
  *
- *         Author: Will and Micah
- *           Date: 10/14/2026
+ *         Author: Will, Micah, Vienna, Michele
+ *           Date: 10/27/2026
  *
  *        Summary: Volunteer form for submitting a gage height measurement
  *
@@ -11,39 +11,77 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormCard } from "@/components/form-card";
 import { PhotoUpload } from "@/components/photo-upload";
 import { SiteSelect } from "@/components/site-select";
+import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { SITES } from "@/lib/sites";
 import Image from "next/image";
 
-export default function SubmitPage() {
-    type Measurement = {
-        siteId: string;
-        gageHeight: number;
-        notes: string;
-        photo: File | null;
-    };
+type Measurement = {
+    monitorName: string;
+    monitorEmail: string;
+    siteId: string;
+    date: string;
+    time: string;
+    gageHeight: number;
+    weather: string;
+    conditions: string;
+    notes: string;
+    photo: File | null;
+};
 
+export default function SubmitPage() {
+    const [monitorName, setMonitorName] = useState("");
+    const [monitorEmail, setMonitorEmail] = useState("");
+    const [date, setDate] = useState("");
+    const [time, setTime] = useState("");
     const [site, setSite] = useState("");
     const [photo, setPhoto] = useState<File | null>(null);
     const [gageHeight, setGageHeight] = useState("");
+    const [weather, setWeather] = useState("");
+    const [conditions, setConditions] = useState("");
     const [notes, setNotes] = useState("");
     const [submission, setSubmission] = useState<Measurement | null>(null);
     const [siteError, setSiteError] = useState("");
     const [gageError, setGageError] = useState("");
+    const [timeError, setTimeError] = useState("");
+    const [dateError, setDateError] = useState("");
+    const [nameError, setNameError] = useState("");
+    const [emailError, setEmailError] = useState("");
+
+    useEffect(() => {
+        setDate(new Date().toLocaleDateString("en-CA"));
+        setTime(new Date().toTimeString().slice(0, 5));
+    }, []);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const nameMissing = monitorName === "";
+        const emailMissing = monitorEmail === "";
+        const dateMissing = date === "";
+        const timeMissing = time === "";
         const siteMissing = site === "";
         const gageMissing = gageHeight === "";
+        setNameError(nameMissing ? "This field is required" : "");
+        setEmailError(emailMissing ? "This field is required" : "");
+        setDateError(dateMissing ? "This field is required" : "");
+        setTimeError(timeMissing ? "This field is required" : "");
         setSiteError(siteMissing ? "This field is required" : "");
         setGageError(gageMissing ? "This field is required" : "");
-        if (siteMissing || gageMissing) {
+        if (
+            siteMissing ||
+            gageMissing ||
+            nameMissing ||
+            emailMissing ||
+            dateMissing ||
+            timeMissing
+        ) {
             setSubmission(null);
             return;
         }
@@ -51,8 +89,14 @@ export default function SubmitPage() {
         setSubmission({
             siteId: site,
             gageHeight: Number(gageHeight),
+            weather: weather,
+            conditions: conditions,
             notes: notes,
             photo: photo,
+            monitorName: monitorName,
+            monitorEmail: monitorEmail,
+            date: date,
+            time: time,
         });
     };
 
@@ -76,11 +120,66 @@ export default function SubmitPage() {
 
             <form onSubmit={submit}>
                 <div className="flex flex-col gap-4">
+                    <Field>
+                        <FieldLabel htmlFor="monitor-name" required>
+                            MONITOR NAME
+                        </FieldLabel>
+                        <Input
+                            id="monitor-name"
+                            placeholder="Enter your name"
+                            value={monitorName}
+                            aria-invalid={!!nameError}
+                            onChange={(e) => setMonitorName(e.target.value)}
+                        />
+                        {nameError && <FieldError>{nameError}</FieldError>}
+                    </Field>
+                    <Field>
+                        <FieldLabel htmlFor="monitor-email" required>
+                            MONITOR EMAIL
+                        </FieldLabel>
+                        <Input
+                            id="monitor-email"
+                            type="email"
+                            placeholder="Enter Email Address"
+                            value={monitorEmail}
+                            aria-invalid={!!emailError}
+                            onChange={(e) => setMonitorEmail(e.target.value)}
+                        />
+                        {emailError && <FieldError>{emailError}</FieldError>}
+                    </Field>
                     <SiteSelect
                         value={site}
                         onChange={setSite}
                         error={siteError}
                     />
+                    <div className="flex gap-4">
+                        <Field>
+                            <FieldLabel htmlFor="date" required>
+                                DATE
+                            </FieldLabel>
+                            <Input
+                                id="date"
+                                type="date"
+                                value={date}
+                                aria-invalid={!!dateError}
+                                onChange={(e) => setDate(e.target.value)}
+                            />
+                            {dateError && <FieldError>{dateError}</FieldError>}
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="time" required>
+                                TIME
+                            </FieldLabel>
+                            <Input
+                                id="time"
+                                type="time"
+                                value={time}
+                                aria-invalid={!!timeError}
+                                onChange={(e) => setTime(e.target.value)}
+                            />
+                            {timeError && <FieldError>{timeError}</FieldError>}
+                        </Field>
+                    </div>
                     <Field>
                         <FieldLabel htmlFor="gage-height" required>
                             GAGE HEIGHT (ft)
@@ -97,6 +196,38 @@ export default function SubmitPage() {
                         />
                         {gageError && <FieldError>{gageError}</FieldError>}
                     </Field>
+                    <Field>
+                        <FieldLabel htmlFor="weather-select">
+                            WEATHER (OPTIONAL)
+                        </FieldLabel>
+                        <NativeSelect
+                            id="weather-select"
+                            value={weather}
+                            onChange={(e) => setWeather(e.target.value)}
+                        >
+                            <option value="">Select weather</option>
+                            <option value="Sunny">Sunny</option>
+                            <option value="Partly cloudy">Partly cloudy</option>
+                            <option value="Overcast">Overcast</option>
+                            <option value="Light rain">Light rain</option>
+                            <option value="Heavy rain">Heavy rain</option>
+                            <option value="Snow">Snow</option>
+                            <option value="Other">Other</option>
+                        </NativeSelect>
+                    </Field>
+                    <Field>
+                        <FieldLabel htmlFor="conditions">
+                            STREAM CONDITIONS & OBSERVATIONS (OPTIONAL)
+                        </FieldLabel>
+                        <Textarea
+                            id="conditions"
+                            rows={4}
+                            value={conditions}
+                            placeholder="Add context about stream conditions"
+                            onChange={(e) => setConditions(e.target.value)}
+                        />
+                    </Field>
+
                     <Field>
                         <FieldLabel htmlFor="notes">
                             NOTES (OPTIONAL)
@@ -117,14 +248,19 @@ export default function SubmitPage() {
                     </Button>
                 </div>
             </form>
-
-            {submission && !gageError && (
+            {submission && (
                 <div className="text-[14px]">
+                    <p>Monitor Name: {submission.monitorName}</p>
+                    <p>Monitor Email: {submission.monitorEmail}</p>
                     <p>
                         Site Name:{" "}
                         {SITES.find((s) => s.id === submission.siteId)?.name}
                     </p>
+                    <p>Date: {submission.date}</p>
+                    <p>Time: {submission.time}</p>
                     <p>Gage Height: {submission.gageHeight}</p>
+                    <p>Weather: {submission.weather}</p>
+                    <p>Stream Conditions: {submission.conditions}</p>
                     <p>Notes: {submission.notes}</p>
                     <p>Photo file: {submission.photo?.name}</p>
                 </div>
