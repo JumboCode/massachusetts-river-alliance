@@ -14,19 +14,27 @@
         "typecheck": "next typegen && tsc --noEmit"
     },
     "dependencies": {
-        "cn": "^0.4.0",
+        "@date-fns/tz": "1.5.0",
+        "class-variance-authority": "0.7.1",
+        "cn": "0.5.0",
         "lucide-react": "^1.57.0",
-        "next": "16.4.0",
+        "next": "16.4.3",
+        "radix-ui": "1.8.1",
         "react": "19.3.0",
-        "react-dom": "19.3.0"
+        "react-dom": "19.3.0",
+        "recharts": "3.8.0",
+        "shadcn": "4.22.1",
+        "tw-animate-css": "1.4.0"
     },
     "devDependencies": {
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1",
         "@tailwindcss/turbopack": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
-        "eslint-config-next": "16.4.0",
+        "eslint-config-next": "16.4.3",
+        "eslint-plugin-better-tailwindcss": "4.10.0",
         "husky": "^9.1.7",
         "lint-staged": "^16.4.0",
         "prettier": "^3.9.9",
