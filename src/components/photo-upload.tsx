@@ -10,7 +10,9 @@
  **************************************************************/
 
 import { type ChangeEvent, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
 
@@ -56,7 +58,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
     return (
         <Field>
             <FieldLabel htmlFor="photo">PHOTO (OPTIONAL)</FieldLabel>
-            <input
+            <Input
                 ref={inputRef}
                 className="peer sr-only"
                 id="photo"
@@ -74,22 +76,24 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                             fill
                         />
                     )}
-                    <button
-                        className="absolute right-2 top-2 flex size-7 cursor-pointer items-center justify-center rounded-full bg-label/20"
+                    <Button
+                        className="absolute top-2 right-2 rounded-full"
+                        variant="outline"
+                        size="icon-sm"
                         type="button"
                         aria-label="Remove photo"
                         onClick={handleRemove}
                     >
-                        <X size={16} />
-                    </button>
+                        <X />
+                    </Button>
                 </div>
             ) : (
                 <label
-                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-sm underline peer-focus-visible:ring-3 peer-focus-visible:ring-primary/50"
+                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50"
                     htmlFor="photo"
                 >
-                    <Upload size={35} className="text-label" />
-                    <span className="text-label">Add a photo</span>
+                    <Upload size={35} className="text-muted-foreground" />
+                    <span className="text-muted-foreground">Add a photo</span>
                 </label>
             )}
             {error && <FieldError>{error}</FieldError>}

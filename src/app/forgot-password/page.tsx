@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
                         width={100}
                         height={47}
                     />
-                    <p className="text-center text-sm">
+                    <p className="text-center text-body">
                         If an account exists for that email, we&apos;ve sent a
                         reset link.
                     </p>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
                     width={100}
                     height={47}
                 />
-                <h1 className="font-heading text-center text-[32px] font-bold tracking-[0.08em]">
+                <h1 className="text-center font-heading text-title">
                     Forgot Password
                 </h1>
             </div>
@@ -102,7 +102,9 @@ export default function ForgotPasswordPage() {
 
                 <div className="mt-6 flex flex-col items-center gap-1">
                     {/* Submit Button */}
-                    <Button type="submit">Send Reset Link</Button>
+                    <Button type="submit" size="lg">
+                        Send Reset Link
+                    </Button>
                     {/* Link back to login page */}
                     <TextLink href="/login">Back to Login</TextLink>
                 </div>

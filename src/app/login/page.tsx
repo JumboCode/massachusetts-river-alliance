@@ -51,10 +51,10 @@ export default function LoginPage() {
                         height={110}
                         loading="eager"
                         sizes="(max-width: 235px) 100vw, 235px"
-                        className="w-full h-auto max-w-[235px]"
+                        className="h-auto w-full max-w-58.75"
                     />
 
-                    <h1 className="font-heading font-bold text-[40px] leading-[100%] tracking-[0.08em] text-center">
+                    <h1 className="text-center font-heading text-display">
                         Admin Login
                     </h1>
                 </div>
@@ -94,12 +94,12 @@ export default function LoginPage() {
                     </Field>
                     {/* Login button and forgot password link */}
                     <div className="flex flex-col items-center gap-4">
-                        <Button type="submit" className="w-full">
+                        <Button type="submit" size="lg" className="w-full">
                             Login
                         </Button>
 
                         {loggedIn && (
-                            <p className="text-green-600">Logged in!</p>
+                            <p className="text-muted-foreground">Logged in!</p>
                         )}
                         <TextLink href="/forgot-password">
                             Forgot Password?

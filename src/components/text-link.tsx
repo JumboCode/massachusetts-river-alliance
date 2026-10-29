@@ -5,12 +5,12 @@
  *         Author: Zander
  *           Date: 10/14/2026
  *
- *        Summary: Small underlined link from the Figma hi-fi
+ *        Summary: Small underlined link
  *
  **************************************************************/
 
 import Link from "next/link";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 export function TextLink({
     className,
@@ -19,7 +19,7 @@ export function TextLink({
     return (
         <Link
             className={cn(
-                "text-[11px] font-extrabold tracking-[0.08em] text-muted-foreground underline",
+                "text-field-label text-muted-foreground underline",
                 className,
             )}
             {...props}

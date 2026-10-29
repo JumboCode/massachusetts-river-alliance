@@ -73,7 +73,7 @@ export default function ReviewFiltersPage() {
 
     return (
         <div>
-            <h1 className="font-heading text-xl">Submission review</h1>
+            <h1 className="text-heading">Submission review</h1>
 
             <div className="flex flex-row gap-2">
                 <Field>
