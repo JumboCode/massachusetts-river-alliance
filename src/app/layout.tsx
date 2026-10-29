@@ -5,7 +5,7 @@
  *         Author: Zander
  *           Date: 10/6/2026
  *
- *        Summary: Root layout, loads fonts and global styles
+ *        Summary: Root layout, loads the font and global styles
  *
  **************************************************************/
 
@@ -13,18 +13,21 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 
-// Body font. Figma uses Avenir, which isn't free, so Inter stands in.
+// theme.css builds the sans font stack from --font-inter.
 const inter = Inter({
     variable: "--font-inter",
     subsets: ["latin"],
 });
 
-// Heading font from the Figma hi-fi.
+// Hi-fi heading font.
 const montserrat = Montserrat({
     variable: "--font-montserrat",
     subsets: ["latin"],
     weight: "700",
 });
+
+// "lofi" or "hifi". Both themes live in src/styles/theme.css.
+const THEME = "lofi";
 
 export const metadata: Metadata = {
     title: "Massachusetts Rivers Alliance",
@@ -35,9 +38,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
         <html
             lang="en"
-            className={`${inter.variable} ${montserrat.variable} h-full font-sans antialiased`}
+            data-theme={THEME}
+            className={`${inter.variable} ${montserrat.variable} h-full`}
         >
-            <body className="min-h-full flex flex-col">{children}</body>
+            <body className="flex min-h-full flex-col">{children}</body>
         </html>
     );
 }

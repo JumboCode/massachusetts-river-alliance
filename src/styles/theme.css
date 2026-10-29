@@ -1,0 +1,158 @@
+/***************************************************************
+ *
+ *                src/styles/theme.css
+ *
+ *         Author: Zander
+ *           Date: 10/28/2026
+ *
+ *        Summary: Token values, the only place colors, type, motion and
+ *                 stacking are set
+ *
+ **************************************************************/
+
+:root {
+    /* Page and surfaces */
+    --background: #fafafa;
+    --foreground: #1a1c1f;
+    --card: #ffffff;
+    --card-foreground: #1a1c1f;
+    --popover: #ffffff;
+    --popover-foreground: #1a1c1f;
+
+    /* Actions */
+    --primary: #cdcdcd;
+    --primary-foreground: #1a1c1f;
+    --primary-hover: #bdbdbd;
+    --accent: #f0f2f2;
+    --accent-foreground: #1a1c1f;
+    --destructive: #9e3333;
+
+    /* Selection */
+    --selected: #cdcdcd;
+    --selected-foreground: #1a1c1f;
+    --emphasis: #333638;
+    --emphasis-foreground: #ffffff;
+
+    /* Quiet text and fills */
+    --muted: #f0f2f2;
+    --muted-foreground: #595e63;
+    --label-foreground: #595e63;
+
+    --success: #cdcdcd;
+    --success-foreground: #1a1c1f;
+    --warning: #f0f2f2;
+    --warning-foreground: #595e63;
+
+    /* Lines and focus */
+    --border: #e0e3e5;
+    --input: #c2c4c7;
+    --ring: #595e63;
+    --radius: 6px;
+
+    --chart-1: #333638;
+
+    --font-family-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    --font-family-heading: var(--font-family-sans);
+}
+
+@theme {
+    --text-label: 10px;
+    --text-label--line-height: 1.2;
+    --text-label--letter-spacing: 0.06em;
+    --text-label--font-weight: 600;
+    --text-field-label: 11px;
+    --text-field-label--line-height: 1.2;
+    --text-field-label--letter-spacing: 0.08em;
+    --text-field-label--font-weight: 600;
+    --text-meta: 12px;
+    --text-meta--line-height: calc(1 / 0.75);
+    --text-button: 14px;
+    --text-button--line-height: calc(1.25 / 0.875);
+    --text-button--letter-spacing: normal;
+    --text-button--font-weight: 600;
+    --text-ui: 13px;
+    --text-ui--line-height: 1.25;
+    --text-body: 14px;
+    --text-body--line-height: calc(1.25 / 0.875);
+    --text-mobile-input: 16px;
+    --text-mobile-input--line-height: 1.5;
+    --text-section: 15px;
+    --text-section--line-height: 1.25;
+    --text-section--font-weight: 600;
+    --text-heading: 20px;
+    --text-heading--line-height: 1.2;
+    --text-heading--font-weight: 600;
+    --text-title: 24px;
+    --text-title--line-height: 1.2;
+    --text-title--letter-spacing: normal;
+    --text-title--font-weight: 600;
+    --text-display: 24px;
+    --text-display--line-height: 1.2;
+    --text-display--letter-spacing: normal;
+    --text-display--font-weight: 600;
+    --text-reading: 28px;
+    --text-reading--line-height: 1.2;
+    --text-reading--font-weight: 600;
+
+    /* Radii */
+    --radius-button: 5px;
+    --radius-control: 6px;
+    --radius-card: 8px;
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 6px;
+    --radius-xl: 8px;
+
+    --shadow-menu: 0 4px 12px 0 rgb(26 28 31 / 0.1);
+    --shadow-overlay: 0 12px 32px 0 rgb(26 28 31 / 0.16);
+
+    --transition-duration-fast: 100ms;
+    --transition-duration-base: 150ms;
+    --transition-duration-slow: 200ms;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --default-transition-duration: var(--transition-duration-base);
+    --default-transition-timing-function: var(--ease-standard);
+
+    --z-index-overlay: 50;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --transition-duration-fast: 0.01ms;
+        --transition-duration-base: 0.01ms;
+        --transition-duration-slow: 0.01ms;
+    }
+}
+
+[data-theme="hifi"] {
+    --background: #e7ecef;
+    --foreground: #1a2c37;
+    --card: #ffffff;
+    --popover: #ffffff;
+    --primary: #5fa8d3;
+    --primary-foreground: #ffffff;
+    --primary-hover: #829cbc;
+    --input: #829cbc;
+    --ring: #5fa8d3;
+    --muted-foreground: #6d808c;
+    --label-foreground: #404f5a;
+    --destructive: #ea7e7e;
+
+    --font-family-heading: var(--font-montserrat), var(--font-family-sans);
+
+    --text-field-label--font-weight: 800;
+    --text-button: 15px;
+    --text-button--line-height: normal;
+    --text-button--letter-spacing: 0.08em;
+    --text-button--font-weight: 800;
+    --text-title: 32px;
+    --text-title--line-height: normal;
+    --text-title--letter-spacing: 0.08em;
+    --text-title--font-weight: 700;
+    --text-display: 40px;
+    --text-display--line-height: 1;
+    --text-display--letter-spacing: 0.08em;
+    --text-display--font-weight: 700;
+
+    --radius-card: 10px;
+}
