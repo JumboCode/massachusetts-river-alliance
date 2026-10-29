@@ -34,7 +34,7 @@ export const cn = createCn({
             ease: ["standard"],
         },
         classGroups: {
-            duration: [{ duration: ["fast", "base", "slow"] }],
+            duration: [{ duration: ["fast", "base"] }],
             z: [
                 {
                     z: ["overlay"],

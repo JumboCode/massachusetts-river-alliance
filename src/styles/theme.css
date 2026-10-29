@@ -101,7 +101,6 @@
 
     --transition-duration-fast: 100ms;
     --transition-duration-base: 150ms;
-    --transition-duration-slow: 200ms;
     --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
     --default-transition-duration: var(--transition-duration-base);
     --default-transition-timing-function: var(--ease-standard);
@@ -113,7 +112,6 @@
     :root {
         --transition-duration-fast: 0.01ms;
         --transition-duration-base: 0.01ms;
-        --transition-duration-slow: 0.01ms;
     }
 }
 
