@@ -9,7 +9,7 @@
  *
  **************************************************************/
 
-export const STATUSES = ["pending", "approved", "rejected", "hidden"] as const;
+export const STATUSES = ["pending", "approved", "rejected"] as const;
 export type Status = (typeof STATUSES)[number];
 
 export type Reading = {

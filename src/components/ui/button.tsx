@@ -27,7 +27,6 @@ const buttonVariants = cva(
                     "border-input bg-card text-destructive hover:bg-destructive/10 focus-visible:border-destructive focus-visible:ring-destructive/20",
             },
             size: {
-                "sm": "h-6.5 gap-1 px-3 text-meta font-semibold [&_svg:not([class*='size-'])]:size-3.5",
                 "default": "h-9 px-4 text-meta font-semibold",
                 "lg": "h-10 px-7.5 text-button",
                 "icon-sm": "size-6.5 [&_svg:not([class*='size-'])]:size-3.5",

@@ -30,7 +30,7 @@ export const cn = createCn({
                 "reading",
             ],
             radius: ["button", "control", "card"],
-            shadow: ["menu", "overlay"],
+            shadow: ["overlay"],
             ease: ["standard"],
         },
         classGroups: {

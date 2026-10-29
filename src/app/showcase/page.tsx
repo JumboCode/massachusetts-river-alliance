@@ -32,8 +32,6 @@ const SWATCHES = [
     ["card", "bg-card"],
     ["primary", "bg-primary"],
     ["primary-hover", "bg-primary-hover"],
-    ["selected", "bg-selected"],
-    ["emphasis", "bg-emphasis"],
     ["muted", "bg-muted"],
     ["muted-foreground", "bg-muted-foreground"],
     ["label-foreground", "bg-label-foreground"],
@@ -66,7 +64,7 @@ const RADII = [
 ];
 
 const BUTTON_VARIANTS = ["default", "outline", "destructive"] as const;
-const BUTTON_SIZES = ["sm", "default", "lg"] as const;
+const BUTTON_SIZES = ["default", "lg"] as const;
 
 export default function ShowcasePage() {
     if (process.env.NODE_ENV === "production") notFound();

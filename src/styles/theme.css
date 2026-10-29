@@ -27,12 +27,6 @@
     --accent-foreground: #1a1c1f;
     --destructive: #9e3333;
 
-    /* Selection */
-    --selected: #cdcdcd;
-    --selected-foreground: #1a1c1f;
-    --emphasis: #333638;
-    --emphasis-foreground: #ffffff;
-
     /* Quiet text and fills */
     --muted: #f0f2f2;
     --muted-foreground: #595e63;
@@ -103,7 +97,6 @@
     --radius-lg: 6px;
     --radius-xl: 8px;
 
-    --shadow-menu: 0 4px 12px 0 rgb(26 28 31 / 0.1);
     --shadow-overlay: 0 12px 32px 0 rgb(26 28 31 / 0.16);
 
     --transition-duration-fast: 100ms;

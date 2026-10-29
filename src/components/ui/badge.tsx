@@ -22,18 +22,17 @@ const badgeVariants = cva(
                 destructive: "bg-card text-destructive",
                 success: "bg-success text-success-foreground",
                 warning: "bg-warning text-warning-foreground",
-                muted: "bg-card text-muted-foreground",
             },
         },
         defaultVariants: {
-            variant: "muted",
+            variant: "warning",
         },
     },
 );
 
 function Badge({
     className,
-    variant = "muted",
+    variant = "warning",
     asChild = false,
     ...props
 }: React.ComponentProps<"span"> &

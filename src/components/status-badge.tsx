@@ -16,14 +16,12 @@ const VARIANT = {
     pending: "warning",
     approved: "success",
     rejected: "destructive",
-    hidden: "muted",
 } as const satisfies Record<Status, string>;
 
 const LABEL: Record<Status, string> = {
     pending: "Pending",
     approved: "Approved",
     rejected: "Rejected",
-    hidden: "Hidden",
 };
 
 export function StatusBadge({ status }: { status: Status }) {
