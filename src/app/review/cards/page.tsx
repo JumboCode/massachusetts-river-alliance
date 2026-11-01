@@ -75,6 +75,11 @@ export default function SubmissionCardsPage() {
             return next;
         });
     };
+    const STATUS_STYLES: Record<string, string> = {
+        Pending: "bg-amber-50 text-amber-700 outline-amber-300",
+        Approved: "bg-green-50 text-green-700 outline-green-300",
+        Rejected: "bg-red-50 text-red-700 outline-red-300",
+    };
 
     return (
         <div className="w-[500px] self-stretch px-6 py-5 bg-neutral-50 border-r border-zinc-300 inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
@@ -129,7 +134,9 @@ export default function SubmissionCardsPage() {
                                                     : "photos"}
                                             </span>
                                         </div>
-                                        <div className="ml-auto flex items-center justify-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-zinc-600 outline outline-1 outline-offset-[-1px] outline-stone-300">
+                                        <div
+                                            className={`ml-auto flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium outline outline-1 outline-offset-[-1px] ${STATUS_STYLES[s.status] ?? "bg-gray-100 text-zinc-600 outline-stone-300"}`}
+                                        >
                                             {s.status.toUpperCase()}
                                         </div>
                                     </div>
