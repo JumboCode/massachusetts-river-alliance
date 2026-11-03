@@ -30,6 +30,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Always `git pull` on `main` before making a new branch.
 - Name branches `[topic]/[feature]`, e.g. `feature/submit-form` or `fix/map-zoom`.
 - Run `npm install` after pulling if `package.json` changed.
+- Run `npm test` to run the unit tests.
 
 ## Git Commands Guide
 
