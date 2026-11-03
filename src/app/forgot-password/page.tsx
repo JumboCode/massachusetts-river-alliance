@@ -83,7 +83,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
                     <FieldLabel htmlFor="email" required>
-                        EMAIL
+                        Email
                     </FieldLabel>
 
                     {/* Input box */}
