@@ -57,7 +57,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
 
     return (
         <Field>
-            <FieldLabel htmlFor="photo">PHOTO (OPTIONAL)</FieldLabel>
+            <FieldLabel htmlFor="photo">Photo (optional)</FieldLabel>
             <Input
                 ref={inputRef}
                 className="peer sr-only"
