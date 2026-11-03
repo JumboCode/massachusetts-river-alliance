@@ -1,0 +1,41 @@
+# Deploy: PRs get a Vercel preview, pushes to main deploy to production.
+name: Deploy
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+concurrency:
+    group: deploy-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    VERCEL_ENV: ${{ github.event_name == 'push' && 'production' || 'preview' }}
+    PROD_FLAG: ${{ github.event_name == 'push' && '--prod' || '' }}
+
+jobs:
+    deploy:
+        name: Vercel ${{ github.event_name == 'push' && 'production' || 'preview' }}
+        # Forked PRs can't read secrets, so only deploy branches in this repo.
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions/setup-node@v7
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+            - name: Pull Vercel settings
+              run: npx vercel@64.1.0 pull --yes --environment=$VERCEL_ENV --token=${{ secrets.VERCEL_TOKEN }}
+            - name: Build
+              run: npx vercel@64.1.0 build $PROD_FLAG --token=${{ secrets.VERCEL_TOKEN }}
+            - name: Deploy
+              run: |
+                  url=$(npx vercel@64.1.0 deploy --prebuilt $PROD_FLAG --token=${{ secrets.VERCEL_TOKEN }})
+                  echo "Deployed: $url" >> "$GITHUB_STEP_SUMMARY"
