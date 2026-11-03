@@ -118,7 +118,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="monitor-name" required>
-                            MONITOR NAME
+                            Monitor name
                         </FieldLabel>
                         <Input
                             id="monitor-name"
@@ -131,7 +131,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="monitor-email" required>
-                            MONITOR EMAIL
+                            Monitor email
                         </FieldLabel>
                         <Input
                             id="monitor-email"
@@ -151,7 +151,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     <div className="flex gap-4">
                         <Field>
                             <FieldLabel htmlFor="date" required>
-                                DATE
+                                Date
                             </FieldLabel>
                             <Input
                                 id="date"
@@ -164,7 +164,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="time" required>
-                                TIME
+                                Time
                             </FieldLabel>
                             <Input
                                 id="time"
@@ -178,7 +178,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </div>
                     <Field>
                         <FieldLabel htmlFor="gage-height" required>
-                            GAGE HEIGHT (ft)
+                            Gage height (ft)
                         </FieldLabel>
 
                         <Input
@@ -194,7 +194,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="weather-select">
-                            WEATHER (OPTIONAL)
+                            Weather (optional)
                         </FieldLabel>
                         <NativeSelect
                             id="weather-select"
@@ -213,7 +213,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="conditions">
-                            STREAM CONDITIONS & OBSERVATIONS (OPTIONAL)
+                            Stream conditions & observations (optional)
                         </FieldLabel>
                         <Textarea
                             id="conditions"
@@ -226,7 +226,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                     <Field>
                         <FieldLabel htmlFor="notes">
-                            NOTES (OPTIONAL)
+                            Notes (optional)
                         </FieldLabel>
                         <Input
                             id="notes"

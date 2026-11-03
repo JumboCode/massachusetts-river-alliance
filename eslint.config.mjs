@@ -75,9 +75,23 @@ const MAP_SDK_BAN = {
     message: "Use SiteMap from @/components/site-map.",
 };
 
+const ARCGIS_IMPORT_BANS = [
+    {
+        group: ["@esri/arcgis-rest-*"],
+        message: "Only src/lib/arcgis/ talks to ArcGIS.",
+    },
+];
+
 const restrictImports = (...patterns) => [
     "error",
-    { patterns: [...BASE_IMPORT_BANS, MAP_SDK_BAN, ...patterns] },
+    {
+        patterns: [
+            ...BASE_IMPORT_BANS,
+            ...ARCGIS_IMPORT_BANS,
+            MAP_SDK_BAN,
+            ...patterns,
+        ],
+    },
 ];
 
 const eslintConfig = defineConfig([
@@ -165,6 +179,7 @@ const eslintConfig = defineConfig([
                 {
                     patterns: [
                         ...BASE_IMPORT_BANS,
+                        ...ARCGIS_IMPORT_BANS,
                         {
                             group: ["@/app/*"],
                             message: "Shared code can't import route code.",
@@ -182,6 +197,24 @@ const eslintConfig = defineConfig([
                 message:
                     "Don't import another route's _components. Move it to src/components/ once two routes need it.",
             }),
+        },
+    },
+    {
+        files: ["src/lib/arcgis/**"],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: [
+                        ...BASE_IMPORT_BANS,
+                        MAP_SDK_BAN,
+                        {
+                            group: ["@/app/*"],
+                            message: "Shared code can't import route code.",
+                        },
+                    ],
+                },
+            ],
         },
     },
     globalIgnores([
