@@ -1,7 +1,9 @@
-/* Author: Helen and Tanish
+/* 
+Author: Helen and Tanish
  * Date: 10/20/2026
  * pages.tsx
  * station-summary-popup
+ * Summary: input info for station summary popup feature
  */
 import { SITES } from "@/lib/sites";
 import {

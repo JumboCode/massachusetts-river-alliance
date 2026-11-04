@@ -1,8 +1,10 @@
-/* Author: Helen and Tanish
- * Date: 10/20/2026
- * pages.tsx
- * station-summary-popup
- *
+/*
+ * Author: Helen and Tanish
+ * Date: 10/20/2026, changes made on 11/3
+ * station-summary-popup.tsx
+ * Summary: a station summary popup feature when user hovers over a station.
+ * shows the station's info if available, and shows a message if there is no
+ * info entered yet.
  *
  *
  */
@@ -34,10 +36,10 @@ export function StationSummaryPopup({
             <CardContent className="flex flex-col gap-1">
                 {latest ? (
                     <>
-                        <p className="text-meta font-semibold tracking-wide text-muted-foreground uppercase">
+                        <p className="text-label text-muted-foreground uppercase">
                             Latest approved reading
                         </p>
-                        <p className="text-reading font-bold">
+                        <p className="text-reading">
                             {latest.gageHeightFt.toFixed(2)} ft
                         </p>
                         <p className="text-meta text-muted-foreground">
@@ -52,7 +54,7 @@ export function StationSummaryPopup({
             </CardContent>
 
             <CardContent>
-                <Button asChild variant="outline" className="w-full">
+                <Button asChild className="w-full">
                     <Link href={`/?station=${site.id}`}>View details →</Link>
                 </Button>
             </CardContent>
