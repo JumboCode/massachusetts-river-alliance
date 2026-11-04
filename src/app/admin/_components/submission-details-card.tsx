@@ -13,7 +13,12 @@
 
 "use client";
 import { StatusBadge } from "@/components/status-badge";
-import { Dialog } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -23,9 +28,14 @@ import { Submission } from "../submissions/page";
 
 export function SubmissionDetailsCard({
     submission,
+    onApprove,
+    onReject,
 }: {
     submission: Submission;
+    onApprove: () => void;
+    onReject: () => void;
 }) {
+    const resolved = submission.status !== "pending";
     return (
         <Card className="p-8 h-screen">
             <h2 className="text-title">Submission Details</h2>
@@ -54,7 +64,7 @@ export function SubmissionDetailsCard({
             </div>
 
             <div>
-                <p className="text-field-label uppercase">MEASURED TIME</p>
+                <p className="text-field-label uppercase">MEASURED</p>
                 <p className="text-body">
                     {formatMassTime(submission.observedAt)}
                 </p>
@@ -62,16 +72,24 @@ export function SubmissionDetailsCard({
 
             <div className="flex p-3 justify-center border-3 rounded-control text-body underline text-label-foreground bg-muted h-40 items-center">
                 {submission.photoUrl ? (
-                    <div className="flex flex-col gap-2 items-center">
-                        <Image
-                            alt="SUBMISSION PHOTO"
-                            className="h-fit w-fit object-contain"
-                            src={submission.photoUrl}
-                            width={100}
-                            height={100}
-                        />
-                        <Dialog>Tap to enlarge</Dialog>
-                    </div>
+                    <Dialog>
+                        {/**Should it be text or full box that's clickable...*/}
+                        <DialogTrigger className="flex flex-col gap-2 items-center">
+                            <span>SUBMISSION PHOTO</span>
+                            <span>Tap to enlarge</span>
+                        </DialogTrigger>
+                        <DialogContent aria-describedby={undefined}>
+                            {/**Radix keeps giving errors without dialogtitle ? Not sure what to put here */}
+                            <DialogTitle>SUBMISSION PHOTO</DialogTitle>
+                            <Image
+                                alt="SUBMISSION PHOTO"
+                                className="h-fit w-fit object-contain"
+                                src={submission.photoUrl}
+                                width={100}
+                                height={100}
+                            />
+                        </DialogContent>
+                    </Dialog>
                 ) : (
                     <p>No photo available</p>
                 )}
@@ -85,11 +103,13 @@ export function SubmissionDetailsCard({
             </div>
 
             <div className="flex flex-row gap-2">
+                {/** leaving edit blank for now (no onClick)*/}
                 <Button
                     className="flex-auto"
                     key="outline"
                     variant="outline"
                     size="default"
+                    disabled={resolved}
                 >
                     Edit
                 </Button>
@@ -98,6 +118,8 @@ export function SubmissionDetailsCard({
                     key="destructive"
                     variant="destructive"
                     size="default"
+                    disabled={resolved}
+                    onClick={onReject}
                 >
                     Reject
                 </Button>
@@ -106,6 +128,8 @@ export function SubmissionDetailsCard({
                     key="default"
                     variant="default"
                     size="default"
+                    disabled={resolved}
+                    onClick={onApprove}
                 >
                     Approve
                 </Button>

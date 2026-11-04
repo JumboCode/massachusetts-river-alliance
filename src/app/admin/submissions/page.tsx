@@ -9,7 +9,8 @@
  *                 props to the SubmissionDetailsCard component.
  *
  **************************************************************/
-
+"use client";
+import { useState } from "react";
 import type { Reading } from "@/lib/arcgis/schemas";
 // eslint-disable-next-line no-restricted-imports -- This route intentionally uses the admin submission card.
 import { SubmissionDetailsCard } from "../_components/submission-details-card";
@@ -38,9 +39,18 @@ const SAMPLE: Submission = {
 };
 
 export default function SubmissionsPage() {
+    const [submission, setSubmission] = useState(SAMPLE);
     return (
         <div className="w-100">
-            <SubmissionDetailsCard submission={SAMPLE} />
+            <SubmissionDetailsCard
+                submission={submission}
+                onApprove={() => {
+                    setSubmission({ ...submission, status: "approved" });
+                }}
+                onReject={() => {
+                    setSubmission({ ...submission, status: "rejected" });
+                }}
+            />
         </div>
     );
 }
