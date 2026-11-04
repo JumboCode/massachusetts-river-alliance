@@ -38,7 +38,7 @@ export function SubmissionDetailsCard({
     const resolved = submission.status !== "pending";
     return (
         <Card className="p-8 h-screen">
-            <h2 className="text-title">Submission Details</h2>
+            <h2 className="text-heading">Submission Details</h2>
             <div className="flex flex-row justify-between items-center">
                 <div className="text-meta text-label-foreground">
                     #{submission.id}
@@ -73,20 +73,18 @@ export function SubmissionDetailsCard({
             <div className="flex p-3 justify-center border-3 rounded-control text-body underline text-label-foreground bg-muted h-40 items-center">
                 {submission.photoUrl ? (
                     <Dialog>
-                        {/**Should it be text or full box that's clickable...*/}
                         <DialogTrigger className="flex flex-col gap-2 items-center">
                             <span>SUBMISSION PHOTO</span>
                             <span>Tap to enlarge</span>
                         </DialogTrigger>
                         <DialogContent aria-describedby={undefined}>
-                            {/**Radix keeps giving errors without dialogtitle ? Not sure what to put here */}
-                            <DialogTitle>SUBMISSION PHOTO</DialogTitle>
+                            <DialogTitle></DialogTitle>
                             <Image
                                 alt="SUBMISSION PHOTO"
                                 className="h-fit w-fit object-contain"
                                 src={submission.photoUrl}
-                                width={100}
-                                height={100}
+                                width={200}
+                                height={200}
                             />
                         </DialogContent>
                     </Dialog>
@@ -103,7 +101,6 @@ export function SubmissionDetailsCard({
             </div>
 
             <div className="flex flex-row gap-2">
-                {/** leaving edit blank for now (no onClick)*/}
                 <Button
                     className="flex-auto"
                     key="outline"
