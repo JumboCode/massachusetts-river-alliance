@@ -1,3 +1,13 @@
+/***************************************************************
+ *
+ *                approved-readings-table.tsx
+ *
+ *         Author: Tycho & Vienna
+ *           Date: 11/1/2026
+ *
+ *        Summary: Table with approved readings, taken from readings prop
+ *
+ **************************************************************/
 import type { PublicReading } from "@/lib/arcgis/schemas";
 import { formatMassTime } from "@/lib/time";
 
