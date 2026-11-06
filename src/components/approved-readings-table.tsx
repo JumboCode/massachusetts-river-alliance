@@ -18,30 +18,31 @@ export function ApprovedReadingsTable({ readings }: { readings: Reading[] }) {
             ) : (
                 <table className="w-full text-left">
                     <thead>
-                        <tr className="bg-muted">
-                            <th className="px-scale-3 py-scale-2 w-44 text-left text-muted-foreground text-label">
-                                Date
+                        <tr className="h-7 bg-foreground/5">
+                            <th className="px-2.5 w-44 text-left text-muted-foreground text-label">
+                                DATE
                             </th>
-                            <th className="px-scale-3 py-scale-2 w-28 text-left text-muted-foreground text-label">
-                                Height
+                            <th className="px-2.5 w-28 text-left text-muted-foreground text-label">
+                                HEIGHT
                             </th>
-                            <th className="px-scale-3 py-scale-2 w-36 text-right text-muted-foreground text-label">
-                                Status
+                            <th className="px-2.5 w-36 text-right text-muted-foreground text-label">
+                                STATUS
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         {newestFirst.map((r) => (
-                            <tr key={r.id} className="border-b border-border">
-                                <td className="px-scale-3 py-scale-2">
+                            <tr
+                                key={r.id}
+                                className="h-7 border-b border-border"
+                            >
+                                <td className="px-2.5">
                                     {formatMassTime(r.observedAt)}
                                 </td>
-                                <td className="px-scale-3 py-scale-2">
+                                <td className="px-2.5">
                                     {r.gageHeightFt.toFixed(2)} ft
                                 </td>
-                                <td className="px-scale-3 py-scale-2 text-right">
-                                    Approved
-                                </td>
+                                <td className="px-2.5 text-right">Approved</td>
                             </tr>
                         ))}
                     </tbody>
