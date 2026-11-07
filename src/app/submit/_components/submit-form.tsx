@@ -75,12 +75,12 @@ function TimeColumn({
                 <Button
                     key={v}
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     data-selected={v === selected}
                     className={
                         v === selected
-                            ? "bg-primary text-primary-foreground"
-                            : ""
+                            ? "border-transparent bg-primary text-primary-foreground hover:bg-primary"
+                            : "border-transparent bg-transparent"
                     }
                     onClick={() => onPick(v)}
                 >
