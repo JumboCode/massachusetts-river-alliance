@@ -4,6 +4,8 @@
  *
  *         Author: Zander, Tycho, Caitlyn
  *           Date: 10/14/2026
+ *         Edited by: Michele
+ *           Date: 11/09/2026
  *
  *        Summary: Optional photo picker for a measurement
  *
@@ -58,12 +60,11 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
     return (
         <Field>
             <FieldLabel htmlFor="photo">Photo (optional)</FieldLabel>
-            {/*TODO: Step 5, add name, Step 6, hide real file input*/}
-            {/*MICHELE */}
             <Input
                 ref={inputRef}
-                className="peer sr-only"
+                className="hidden"
                 id="photo"
+                name="photo"
                 type="file"
                 accept="image/jpeg,image/png"
                 onChange={handlePhotoChange}

@@ -9,13 +9,16 @@
  *           Date: 10/18/2026
  *      Edited by: Michele
  *           Date: 10/20/2026
+ *      Editd by: Michele
+ *           Date: 11/09/2026
  *
  *        Summary: Forgot password page
  *
  **************************************************************/
 
 "use client";
-//TODO: Step 4 (useRouter)
+
+import { useRouter } from "next/navigation";
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
 import Image from "next/image";
@@ -23,11 +26,13 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
-//TODO: Step 4, move entire component (state, both screens) into ForgotPasswordForm and make page render the thingy
-//state lives inside keyed component
-//dont reset state in useEffect
-//MICHELE FOR THIS PAGE
+
 export default function ForgotPasswordPage() {
+    //lets form start empty by flushing cache between link navs
+    return <ForgotPasswordForm key={useRouter().bfcacheId} />;
+}
+
+function ForgotPasswordForm() {
     // Use states
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
@@ -85,15 +90,15 @@ export default function ForgotPasswordPage() {
             </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
-                    {/*TODO: Step 4, id "email" is generic from hint, use unique id across pages (update htmlFor) */}
-                    <FieldLabel htmlFor="email" required>
+                    <FieldLabel htmlFor="forgot-password-email" required>
                         Email
                     </FieldLabel>
 
                     {/* Input box */}
-                    {/*TODO: Step 5, add name and autoComplete = "username" */}
                     <Input
-                        id="email"
+                        id="forgot-password-email"
+                        name="email"
+                        autoComplete="username"
                         type="email"
                         placeholder="Enter Email Address"
                         value={email}
@@ -104,10 +109,8 @@ export default function ForgotPasswordPage() {
                     {/* if error, show the error message in red */}
                     {error && <FieldError>{error}</FieldError>}
                 </Field>
-                {/*TODO: Step 2, gap must be 5px */}
-                <div className="mt-6 flex flex-col items-center gap-1">
+                <div className="mt-6 flex flex-col items-center gap-1.25">
                     {/* Submit Button */}
-                    {/*TODO: Step 1, button needs to be primary colored, only as wide as text and padding, check sizes before adding classes */}
                     <Button type="submit" size="lg">
                         Send Reset Link
                     </Button>

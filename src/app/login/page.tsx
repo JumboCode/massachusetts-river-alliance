@@ -5,6 +5,7 @@
  *         Author: Grant, Tanish
  *           Date: 10/18/2026
  *
+ *
  *        Summary: Admin login page
  *
  **************************************************************/
@@ -24,6 +25,9 @@ import { TextLink } from "@/components/text-link";
 //page needs to render keyed component (resets on every link nav)
 //dont reset state in useEffect
 //MICAH FOR THIS PAGE
+//Note: moving loginpage to LoginForm is the exact same as forgot password,
+//but seems like email is already unique here? so just need to do the autocomplete for
+//password and name thing (see the stuff in forgot-password)
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
