@@ -15,7 +15,7 @@
  **************************************************************/
 
 "use client";
-
+//TODO: Step 4 (useRouter)
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
 import Image from "next/image";
@@ -23,7 +23,9 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
-
+//TODO: Step 4, move entire component (state, both screens) into ForgotPasswordForm and make page render the thingy
+//state lives inside keyed component
+//dont reset state in useEffect
 export default function ForgotPasswordPage() {
     // Use states
     const [email, setEmail] = useState("");
@@ -82,11 +84,13 @@ export default function ForgotPasswordPage() {
             </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
+                    {/*TODO: Step 4, id "email" is generic from hint, use unique id across pages (update htmlFor) */}
                     <FieldLabel htmlFor="email" required>
                         Email
                     </FieldLabel>
 
                     {/* Input box */}
+                    {/*TODO: Step 5, add name and autoComplete = "username" */}
                     <Input
                         id="email"
                         type="email"
@@ -99,9 +103,10 @@ export default function ForgotPasswordPage() {
                     {/* if error, show the error message in red */}
                     {error && <FieldError>{error}</FieldError>}
                 </Field>
-
+                {/*TODO: Step 2, gap must be 5px */}
                 <div className="mt-6 flex flex-col items-center gap-1">
                     {/* Submit Button */}
+                    {/*TODO: Step 1, button needs to be primary colored, only as wide as text and padding, check sizes before adding classes */}
                     <Button type="submit" size="lg">
                         Send Reset Link
                     </Button>

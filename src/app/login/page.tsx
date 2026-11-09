@@ -10,7 +10,7 @@
  **************************************************************/
 
 "use client";
-
+//TODO: Step 4 (useRouter)
 import { useState } from "react";
 import Image from "next/image";
 import { FormCard } from "@/components/form-card";
@@ -19,6 +19,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/text-link";
 
+//TODO: Step 4, move entire component (state and jsx) into
+//its own component LoginForm
+//page needs to render keyed component (resets on every link nav)
+//dont reset state in useEffect
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -60,6 +64,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Email and password */}
+                {/*TODO: Step 4/5,  id needs to be unique across pages and update htmlFor to match if changes, add name and autoComplete = "username*/}
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="email-input" required>
@@ -77,6 +82,7 @@ export default function LoginPage() {
                     </Field>
 
                     <Field>
+                        {/*TODO: Step 4/5, same id uniqueness check, add name and autoComplete = "current-password" */}
                         <FieldLabel htmlFor="password-input" required>
                             Password
                         </FieldLabel>
@@ -93,6 +99,8 @@ export default function LoginPage() {
                         )}
                     </Field>
                     {/* Login button and forgot password link */}
+                    {/*TODO: Step 2, button to link gap needs to be 5px */}
+                    {/*TODO: Step 1, button needs to be primary colored, only as wide as text and padding, check sizes before adding classes */}
                     <div className="flex flex-col items-center gap-4">
                         <Button type="submit" size="lg" className="w-full">
                             Login
