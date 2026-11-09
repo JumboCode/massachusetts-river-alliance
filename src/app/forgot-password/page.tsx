@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 //TODO: Step 4, move entire component (state, both screens) into ForgotPasswordForm and make page render the thingy
 //state lives inside keyed component
 //dont reset state in useEffect
+//MICHELE FOR THIS PAGE
 export default function ForgotPasswordPage() {
     // Use states
     const [email, setEmail] = useState("");

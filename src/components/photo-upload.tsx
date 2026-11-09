@@ -59,6 +59,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
         <Field>
             <FieldLabel htmlFor="photo">Photo (optional)</FieldLabel>
             {/*TODO: Step 5, add name, Step 6, hide real file input*/}
+            {/*MICHELE */}
             <Input
                 ref={inputRef}
                 className="peer sr-only"
@@ -72,6 +73,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 //need 56px square thumbnail, rounded, cropped to fill
                 //file name (truncated) over its size (muted text)
                 //remove button at the end (calls handleRemove)
+                //MICAH
                 <div className="relative flex h-30 w-full items-center justify-center overflow-hidden rounded-md border border-input">
                     {previewUrl && (
                         <Image
@@ -98,6 +100,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 //keep upload icon
                 //"add a photo" and muted "jpg or png" line under
                 //remove classes once input no longer uses peer
+                //MICAH
                 <label
                     className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50"
                     htmlFor="photo"

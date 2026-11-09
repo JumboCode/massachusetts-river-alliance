@@ -23,6 +23,7 @@ import { TextLink } from "@/components/text-link";
 //its own component LoginForm
 //page needs to render keyed component (resets on every link nav)
 //dont reset state in useEffect
+//MICAH FOR THIS PAGE
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
