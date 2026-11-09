@@ -134,3 +134,30 @@ export function getApprovedReadings(siteId?: string): PublicReading[] {
         }),
     );
 }
+
+export function createReading(input: {
+    siteId: string;
+    gageHeightFt: number;
+    observedAt: Date;
+    monitorName: string;
+    weather: string | null;
+    conditions: string | null;
+    notes: string | null;
+    photoUrl: string | null;
+}) {
+    const reading: Reading = {
+        id: crypto.randomUUID(),
+        status: "pending",
+        siteId: input.siteId,
+        gageHeightFt: input.gageHeightFt,
+        observedAt: input.observedAt,
+        monitorName: input.monitorName,
+        weather: input.weather,
+        conditions: input.conditions,
+        notes: input.notes,
+        photoUrl: input.photoUrl,
+    };
+
+    SAMPLE.push(reading);
+    return reading;
+}

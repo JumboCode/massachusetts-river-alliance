@@ -9,11 +9,19 @@
  *
  **************************************************************/
 
-import { getReadings } from "../../../lib/arcgis/readings";
-import type { Reading } from "../../../lib/arcgis/schemas";
+import { getApprovedReadings } from "../../../lib/arcgis/readings";
+import type { PublicReading } from "../../../lib/arcgis/schemas";
 
-export async function GET() {
-    const sortedReadings: Reading[] = getReadings();
+export async function GET(request: Request) {
+    const siteId = new URL(request.url).searchParams.get("site");
+
+    let sortedReadings: PublicReading[];
+
+    if (siteId) {
+        sortedReadings = getApprovedReadings(siteId);
+    } else {
+        sortedReadings = getApprovedReadings();
+    }
 
     return Response.json({ sortedReadings });
 }
