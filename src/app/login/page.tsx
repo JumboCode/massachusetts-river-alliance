@@ -94,9 +94,10 @@ function LoginForm() {
                         </FieldLabel>
                         <Input
                             id="password-input"
+                            name="password"
+                            autoComplete="current-password"
                             value={password}
                             type="password"
-                            autoComplete="current-password"
                             placeholder="Enter Password"
                             onChange={(e) => setPassword(e.target.value)}
                             aria-invalid={!!passwordError}
@@ -106,8 +107,8 @@ function LoginForm() {
                         )}
                     </Field>
                     {/* Login button and forgot password link */}
-                    <div className="mt-6 flex flex-col items-center gap-1.25 w-36 self-center">
-                        <Button type="submit" size="lg" className="w-full">
+                    <div className="flex flex-col items-center gap-1.25">
+                        <Button type="submit" size="lg">
                             Login
                         </Button>
 
