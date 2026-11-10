@@ -1,11 +1,11 @@
 /***************************************************************
  *
- *        src\app\admin\_components\submission-details-card.tsx
+ *        src/app/admin/_components/submission-details-card.tsx
  *
  *         Author: Caitlyn, Michele
  *           Date: 11/3/2026
  *
- *        Summary: Admin card for editting/rejecting/approving
+ *        Summary: Admin card for editing/rejecting/approving
  *                 submissions under review. Shows all submission
  *                 details.
  *
@@ -23,8 +23,20 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { formatMassTime } from "@/lib/time";
+import type { Reading } from "@/lib/arcgis/schemas";
 import { SITES } from "@/lib/sites";
-import { Submission } from "../submissions/page";
+
+export type Submission = Pick<
+    Reading,
+    | "id"
+    | "siteId"
+    | "monitorName"
+    | "gageHeightFt"
+    | "observedAt"
+    | "notes"
+    | "photoUrl"
+    | "status"
+>;
 
 export function SubmissionDetailsCard({
     submission,
@@ -36,8 +48,11 @@ export function SubmissionDetailsCard({
     onReject: () => void;
 }) {
     const resolved = submission.status !== "pending";
+    const siteName =
+        SITES.find((s) => s.id === submission.siteId)?.name ??
+        submission.siteId;
     return (
-        <Card className="p-8 h-screen">
+        <Card className="p-8">
             <h2 className="text-heading">Submission Details</h2>
             <div className="flex flex-row justify-between items-center">
                 <div className="text-meta text-label-foreground">
@@ -47,74 +62,81 @@ export function SubmissionDetailsCard({
             </div>
 
             <div>
-                <p className="text-field-label uppercase">SITE</p>
-                <p className="text-body">
-                    {SITES.find((s) => s.id === submission.siteId)?.name}
-                </p>
+                <p className="text-field-label uppercase">Site</p>
+                <p className="text-body">{siteName}</p>
             </div>
 
             <div>
-                <p className="text-field-label uppercase">VOLUNTEER</p>
+                <p className="text-field-label uppercase">Volunteer</p>
                 <p className="text-body">{submission.monitorName}</p>
             </div>
 
             <div>
-                <p className="text-field-label uppercase">GAGE HEIGHT</p>
+                <p className="text-field-label uppercase">Gage height</p>
                 <p className="text-body">{submission.gageHeightFt} ft</p>
             </div>
 
             <div>
-                <p className="text-field-label uppercase">MEASURED</p>
+                <p className="text-field-label uppercase">Measured</p>
                 <p className="text-body">
                     {formatMassTime(submission.observedAt)}
                 </p>
             </div>
 
-            <div className="flex p-3 justify-center border-3 rounded-control text-body underline text-label-foreground bg-muted h-40 items-center">
+            <div className="flex justify-center overflow-hidden border-3 rounded-control text-body text-label-foreground bg-muted h-40 items-center">
                 {submission.photoUrl ? (
                     <Dialog>
-                        <DialogTrigger className="flex flex-col gap-2 items-center">
-                            <span>SUBMISSION PHOTO</span>
-                            <span>Tap to enlarge</span>
-                        </DialogTrigger>
-                        <DialogContent aria-describedby={undefined}>
-                            <DialogTitle></DialogTitle>
+                        <DialogTrigger
+                            aria-label="Enlarge photo"
+                            className="relative size-full"
+                        >
                             <Image
-                                alt="SUBMISSION PHOTO"
-                                className="h-fit w-fit object-contain"
+                                alt=""
+                                className="object-cover"
                                 src={submission.photoUrl}
-                                width={200}
-                                height={200}
+                                fill
+                                sizes="400px"
+                            />
+                        </DialogTrigger>
+                        <DialogContent
+                            aria-describedby={undefined}
+                            className="sm:max-w-3xl"
+                        >
+                            <DialogTitle className="sr-only">
+                                Submission photo
+                            </DialogTitle>
+                            <Image
+                                alt={`Photo from ${submission.monitorName}`}
+                                className="h-auto max-h-[70vh] w-full object-contain"
+                                src={submission.photoUrl}
+                                width={1200}
+                                height={900}
                             />
                         </DialogContent>
                     </Dialog>
                 ) : (
-                    <p>No photo available</p>
+                    <p>No photo submitted</p>
                 )}
             </div>
 
             <div className="rounded-control bg-muted p-3">
-                <p className="text-field-label uppercase">NOTES</p>
-                <p className="text-body break-words max-h-13 overflow-auto">
-                    {submission.notes}
+                <p className="text-field-label uppercase">Notes</p>
+                <p className="text-body break-words">
+                    {submission.notes || "No notes"}
                 </p>
             </div>
 
             <div className="flex flex-row gap-2">
                 <Button
                     className="flex-auto"
-                    key="outline"
                     variant="outline"
-                    size="default"
                     disabled={resolved}
                 >
                     Edit
                 </Button>
                 <Button
                     className="flex-auto"
-                    key="destructive"
                     variant="destructive"
-                    size="default"
                     disabled={resolved}
                     onClick={onReject}
                 >
@@ -122,9 +144,7 @@ export function SubmissionDetailsCard({
                 </Button>
                 <Button
                     className="flex-auto"
-                    key="default"
                     variant="default"
-                    size="default"
                     disabled={resolved}
                     onClick={onApprove}
                 >

@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *        src\app\admin\submissions\page.tsx
+ *        src/app/admin/submissions/page.tsx
  *
  *         Author: Caitlyn, Michele
  *           Date: 11/3/2026
@@ -11,21 +11,11 @@
  **************************************************************/
 "use client";
 import { useState } from "react";
-import type { Reading } from "@/lib/arcgis/schemas";
 // eslint-disable-next-line no-restricted-imports -- This route intentionally uses the admin submission card.
-import { SubmissionDetailsCard } from "../_components/submission-details-card";
-
-export type Submission = Pick<
-    Reading,
-    | "id"
-    | "siteId"
-    | "monitorName"
-    | "gageHeightFt"
-    | "observedAt"
-    | "notes"
-    | "photoUrl"
-    | "status"
->;
+import {
+    SubmissionDetailsCard,
+    type Submission,
+} from "../_components/submission-details-card";
 
 const SAMPLE: Submission = {
     id: "MR-2048",
@@ -41,7 +31,7 @@ const SAMPLE: Submission = {
 export default function SubmissionsPage() {
     const [submission, setSubmission] = useState(SAMPLE);
     return (
-        <div className="w-100">
+        <div className="w-full max-w-100">
             <SubmissionDetailsCard
                 submission={submission}
                 onApprove={() => {
