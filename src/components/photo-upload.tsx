@@ -99,14 +99,12 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 <Button
                     type="button"
                     variant="outline"
-                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3"
+                    className="h-30 w-full flex-col items-center justify-center gap-1 rounded-md"
                     onClick={() => inputRef.current?.click()}
                 >
-                    <Upload size={35} className="text-muted-foreground" />
-                    <span className="text-muted-foreground">Add a photo</span>
-                    <span className="text-meta text-muted-foreground">
-                        JPG or PNG
-                    </span>
+                    <Upload className="size-8.75 text-muted-foreground" />
+                    <span className="underline">Add a photo</span>
+                    <span className="text-muted-foreground">JPG or PNG</span>
                 </Button>
             )}
             {error && <FieldError>{error}</FieldError>}
