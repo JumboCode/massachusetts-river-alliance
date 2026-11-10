@@ -19,20 +19,32 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/text-link";
 
+import { z } from "zod";
+import { emailSchema, REQUIRED } from "@/lib/arcgis/schemas";
+
+const loginSchema = z.object({
+    email: emailSchema,
+    password: z.string({ error: REQUIRED }).min(1, REQUIRED),
+});
+
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+    const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
     const [loggedIn, setLoggedIn] = useState(false);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const trimmedEmail = email.trim();
-        setEmailError(trimmedEmail === "" ? "This field is required" : "");
-        setPasswordError(password === "" ? "This field is required" : "");
-        setLoggedIn(trimmedEmail !== "" && password !== "");
+        const result = loginSchema.safeParse({ email, password });
+        if (!result.success) {
+            setErrors(z.flattenError(result.error).fieldErrors);
+            setLoggedIn(false);
+            return;
+        }
+
+        setErrors({});
+        setLoggedIn(true);
     }
 
     return (
@@ -71,9 +83,11 @@ export default function LoginPage() {
                             type="email"
                             placeholder="Enter Email Address"
                             onChange={(e) => setEmail(e.target.value)}
-                            aria-invalid={!!emailError}
+                            aria-invalid={!!errors.email}
                         ></Input>
-                        {emailError && <FieldError>{emailError}</FieldError>}
+                        {errors.email && (
+                            <FieldError>{errors.email[0]}</FieldError>
+                        )}
                     </Field>
 
                     <Field>
@@ -86,10 +100,10 @@ export default function LoginPage() {
                             type="password"
                             placeholder="Enter Password"
                             onChange={(e) => setPassword(e.target.value)}
-                            aria-invalid={!!passwordError}
+                            aria-invalid={!!errors.password}
                         ></Input>
-                        {passwordError && (
-                            <FieldError>{passwordError}</FieldError>
+                        {errors.password && (
+                            <FieldError>{errors.password[0]}</FieldError>
                         )}
                     </Field>
                     {/* Login button and forgot password link */}

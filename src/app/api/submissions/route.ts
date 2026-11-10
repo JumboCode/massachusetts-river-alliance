@@ -9,28 +9,24 @@
  *
  **************************************************************/
 
+import { submissionSchema } from "@/lib/arcgis/schemas";
+
 export async function POST(request: Request) {
-    const body = await request.json();
+    const bodyResult = await request.json().catch(() => null);
 
-    const REQUIRED = [
-        "siteId",
-        "gageHeight",
-        "date",
-        "time",
-        "monitorName",
-        "monitorEmail",
-    ];
-
-    const missing = REQUIRED.filter(
-        (field) => body[field] === undefined || body[field] === "",
-    );
-
-    if (missing.length !== 0) {
+    if (!bodyResult) {
         return Response.json(
-            { error: "Missing fields: " + missing.join(", ") },
+            { error: "Invalid JSON Payload" },
             { status: 400 },
         );
     }
 
-    return Response.json({ message: "Submission received", body });
+    const result = submissionSchema.safeParse(bodyResult);
+
+    if (!result.success) {
+        const fieldErrors = result.error.flatten(bodyResult.error).fieldErrors;
+        return Response.json(fieldErrors, { status: 400 });
+    }
+
+    return Response.json({ message: "Submission received" }, { status: 201 });
 }
