@@ -1,3 +1,13 @@
+/***************************************************************
+ *
+ *                src/app/readings/page.tsx
+ *
+ *         Author: Tycho & Vienna
+ *           Date: 11/1/2026
+ *
+ *        Summary: Test page for the approved readings table
+ *
+ **************************************************************/
 import {
     ApprovedReadingsTable,
     type Reading,
@@ -35,6 +45,7 @@ export default function Page() {
     return (
         <>
             <ApprovedReadingsTable readings={readings} />
+            <ApprovedReadingsTable readings={[]} />
         </>
     );
 }

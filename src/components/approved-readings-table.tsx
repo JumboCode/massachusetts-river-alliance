@@ -19,7 +19,7 @@ export function ApprovedReadingsTable({ readings }: { readings: Reading[] }) {
     );
 
     return (
-        <section>
+        <section className="bg-card">
             <h2 className="justify-start text-foreground text-meta font-semibold">
                 Approved readings
             </h2>
@@ -28,7 +28,7 @@ export function ApprovedReadingsTable({ readings }: { readings: Reading[] }) {
             ) : (
                 <table className="w-full text-left">
                     <thead>
-                        <tr className="h-7 bg-foreground/5">
+                        <tr className="h-7 bg-muted">
                             <th className="px-2.5 w-44 text-left text-muted-foreground text-label">
                                 DATE
                             </th>
