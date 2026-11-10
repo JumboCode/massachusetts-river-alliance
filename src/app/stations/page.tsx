@@ -1,10 +1,13 @@
-/* 
-Author: Helen and Tanish
- * Date: 10/20/2026
- * pages.tsx
- * station-summary-popup
- * Summary: input info for station summary popup feature
- */
+/***************************************************************
+ *
+ *                src/app/stations/page.tsx
+ *
+ *         Author: Helen and Tanish
+ *           Date: 10/20/2026
+ *
+ *        Summary: Test page showing the station summary popup
+ *
+ **************************************************************/
 import { SITES } from "@/lib/sites";
 import {
     StationSummaryPopup,

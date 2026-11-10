@@ -1,13 +1,14 @@
-/*
- * Author: Helen and Tanish
- * Date: 10/20/2026, changes made on 11/3
- * station-summary-popup.tsx
- * Summary: a station summary popup feature when user hovers over a station.
- * shows the station's info if available, and shows a message if there is no
- * info entered yet.
+/***************************************************************
  *
+ *          src/components/station-summary-popup.tsx
  *
- */
+ *         Author: Helen and Tanish
+ *           Date: 10/20/2026
+ *
+ *        Summary: Card shown when hovering a station on the map,
+ *                 with its latest reading or a no-data message
+ *
+ **************************************************************/
 import Link from "next/link";
 import type { PublicReading } from "@/lib/arcgis/schemas";
 import type { Site } from "@/lib/sites";
