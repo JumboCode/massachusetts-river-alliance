@@ -4,14 +4,16 @@
  *
  *         Author: Grant, Tanish
  *           Date: 10/18/2026
- *
+ *      Edited by: Micah
+ *           Date: 11/10/2026
  *
  *        Summary: Admin login page
  *
  **************************************************************/
 
 "use client";
-//TODO: Step 4 (useRouter)
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { FormCard } from "@/components/form-card";
@@ -20,15 +22,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/text-link";
 
-//TODO: Step 4, move entire component (state and jsx) into
-//its own component LoginForm
-//page needs to render keyed component (resets on every link nav)
+//TODO: Step 4,
 //dont reset state in useEffect
 //MICAH FOR THIS PAGE
-//Note: moving loginpage to LoginForm is the exact same as forgot password,
-//but seems like email is already unique here? so just need to do the autocomplete for
-//password and name thing (see the stuff in forgot-password)
 export default function LoginPage() {
+    return <LoginForm key={useRouter().bfcacheId} />;
+}
+
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState("");
@@ -69,7 +70,6 @@ export default function LoginPage() {
                 </div>
 
                 {/* Email and password */}
-                {/*TODO: Step 4/5,  id needs to be unique across pages and update htmlFor to match if changes, add name and autoComplete = "username*/}
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="email-input" required>
@@ -77,6 +77,8 @@ export default function LoginPage() {
                         </FieldLabel>
                         <Input
                             id="email-input"
+                            name="email"
+                            autoComplete="username"
                             value={email}
                             type="email"
                             placeholder="Enter Email Address"
@@ -87,7 +89,6 @@ export default function LoginPage() {
                     </Field>
 
                     <Field>
-                        {/*TODO: Step 4/5, same id uniqueness check, add name and autoComplete = "current-password" */}
                         <FieldLabel htmlFor="password-input" required>
                             Password
                         </FieldLabel>
@@ -95,6 +96,7 @@ export default function LoginPage() {
                             id="password-input"
                             value={password}
                             type="password"
+                            autoComplete="current-password"
                             placeholder="Enter Password"
                             onChange={(e) => setPassword(e.target.value)}
                             aria-invalid={!!passwordError}
@@ -104,9 +106,7 @@ export default function LoginPage() {
                         )}
                     </Field>
                     {/* Login button and forgot password link */}
-                    {/*TODO: Step 2, button to link gap needs to be 5px */}
-                    {/*TODO: Step 1, button needs to be primary colored, only as wide as text and padding, check sizes before adding classes */}
-                    <div className="flex flex-col items-center gap-4">
+                    <div className="mt-6 flex flex-col items-center gap-1.25 w-36 self-center">
                         <Button type="submit" size="lg" className="w-full">
                             Login
                         </Button>

@@ -96,19 +96,18 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                     </Button>
                 </div>
             ) : (
-                //TODO: Step 6, replace <label> with Button with onClick call to
-                //inputRef.current?.click()
-                //keep upload icon
-                //"add a photo" and muted "jpg or png" line under
-                //remove classes once input no longer uses peer
-                //MICAH
-                <label
-                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50"
-                    htmlFor="photo"
+                <Button
+                    type="button"
+                    variant="outline"
+                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3"
+                    onClick={() => inputRef.current?.click()}
                 >
                     <Upload size={35} className="text-muted-foreground" />
                     <span className="text-muted-foreground">Add a photo</span>
-                </label>
+                    <span className="text-meta text-muted-foreground">
+                        JPG or PNG
+                    </span>
+                </Button>
             )}
             {error && <FieldError>{error}</FieldError>}
         </Field>
