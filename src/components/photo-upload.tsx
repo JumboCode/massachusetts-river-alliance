@@ -87,8 +87,8 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 //MICAH
                 <div className="flex w-full items-center gap-3 rounded-md border border-input p-2">
                     <div className="relative size-14 shrink-0 overflow-hidden rounded-md">
-                        {/**NEED TO INCLUDE: set size to 56px, scale up image to fill entire box (hint: can be done with 1 tailwind class related to object-contain, but notice that object-contain doesnt fill the box)*/}
-                        {/**Also notice in className (below) that we pad it with p-2, but we want no blank spaces around the image and we want it to fill the box */}
+                        {/**NEED TO INCLUDE: set size to 56px (note --> NOT in className, but its own field), scale up image to fill entire box (hint: can be done with 1 tailwind class related to object-contain, but notice that object-contain doesnt fill the box, so maybe look through the docs for something to swap it with)*/}
+                        {/**Also notice in className (below) that we pad it with p-2, but we want no blank spaces around the image and we want it to fill the box- think about if you need padding at all!*/}
                         {previewUrl && (
                             <Image
                                 alt="Preview of uploaded photo"
