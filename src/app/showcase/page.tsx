@@ -8,27 +8,53 @@
  *        Summary: Development only showcase page
  *
  **************************************************************/
-"use client";
 import { notFound } from "next/navigation";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode } from "react";
+import ThemeToggle from "./_components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/status-badge";
+import type { Status } from "@/lib/arcgis/schemas";
 
 export default function Showcase() {
     if (process.env.NODE_ENV === "production") notFound();
-    const [state, setState] = useState<string>("lofi");
-    if (state === "hifi") {
-        setState("lofi");
-    }
 
     return (
-        <main className="">
-            <p className="text-body text-muted-foreground">Showcase</p>
-            <p className="text-body text-muted-foreground">
-                Tokens and components from the Figma. Dev only.
-            </p>
+        <main className="min-h-screen bg-background px-8 py-10 md:px-12">
+            <div className="mx-auto max-w-7xl space-y-12">
+                {/* Header */}
+                <div className="flex flex-col gap-5 border-b pb-8">
+                    <div>
+                        <h1 className="text-title font-semibold tracking-tight">
+                            Showcase
+                        </h1>
+                        <p className="mt-2 text-body text-muted-foreground">
+                            Tokens and components from Figma. Development only.
+                        </p>
+                    </div>
 
-            <Section title="Colors">
-                <ColorGrid state={state}></ColorGrid>
-            </Section>
+                    <ThemeToggle />
+                </div>
+
+                <Section title="Colors">
+                    <ColorGrid />
+                </Section>
+
+                <Section title="Typography">
+                    <TypographyGrid />
+                </Section>
+
+                <Section title="Radius">
+                    <RadiusGrid />
+                </Section>
+
+                <Section title="Button Variants">
+                    <ButtonGrid />
+                </Section>
+
+                <Section title="Status Badges">
+                    <StatusBadgeGrid />
+                </Section>
+            </div>
         </main>
     );
 }
@@ -40,72 +66,197 @@ type SectionProps = {
 
 function Section({ title, children }: SectionProps) {
     return (
-        <div>
-            <h1>{title}</h1>
+        <section className="space-y-6">
+            <div className="border-b pb-3">
+                <h2 className="text-heading font-semibold tracking-tight">
+                    {title}
+                </h2>
+            </div>
+
             {children}
-        </div>
+        </section>
     );
 }
 
-type ColorProps = {
-    name: string;
-    color: string;
-};
+function ColorGrid() {
+    const colorTokens = [
+        "background",
+        "foreground",
+        "card",
+        "card-foreground",
+        "primary",
+        "primary-foreground",
+        "primary-hover",
+        "accent",
+        "destructive",
+        "muted",
+        "muted-foreground",
+        "success",
+        "warning",
+        "border",
+        "input",
+        "ring",
+        "chart-1",
+    ];
 
-function Color_Swatch({ name, color }: ColorProps) {
     return (
-        <div>
-            <div
-                className="w-20 h-10 outline outline-gray"
-                style={{ backgroundColor: color }}
-            ></div>
-            {name}
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            {colorTokens.map((token) => (
+                <div
+                    key={token}
+                    className="space-y-2 rounded-lg border bg-card p-3"
+                >
+                    <div
+                        className="h-16 w-full rounded-md border"
+                        style={{
+                            backgroundColor: `var(--${token})`,
+                        }}
+                    />
+
+                    <p className="text-body font-semibold">{token}</p>
+
+                    <p className="text-meta text-muted-foreground">
+                        {`var(--${token})`}
+                    </p>
+                </div>
+            ))}
         </div>
     );
 }
 
-type ColorGridProps = {
-    state: string;
-};
-function ColorGrid({ state }: ColorGridProps) {
-    const colorNames = useMemo(() => {
-        let colors;
-        if (state === "lofi") {
-            colors = document.querySelector(":root");
-        } else if (state === "hifi") {
-            colors = document.querySelector('[data-theme="hifi"]');
-        }
+function TypographyGrid() {
+    const typographyTokens = [
+        "font-family-sans",
+        "font-family-heading",
+        "text-label",
+        "text-field-label",
+        "text-meta",
+        "text-button",
+        "text-ui",
+        "text-body",
+        "text-mobile-input",
+        "text-section",
+        "text-heading",
+        "text-title",
+        "text-display",
+        "text-reading",
+    ];
 
-        if (!colors) return;
-
-        const styles = getComputedStyle(colors);
-
-        const tempColors = Array.from(styles)
-            .filter((property) => property.startsWith("--"))
-            .map((property) => ({
-                name: property.replace("--", ""),
-                color: styles.getPropertyValue(property).trim(),
-            }))
-            .filter((item) => {
-                const value = item.color;
+    return (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {typographyTokens.map((token) => {
+                const isFont = token.startsWith("font-");
 
                 return (
-                    CSS.supports("color", value) &&
-                    !CSS.supports("width", value)
-                );
-            });
+                    <div
+                        key={token}
+                        className="flex flex-col justify-between gap-5 rounded-lg border bg-card p-5"
+                    >
+                        <div>
+                            <p className="text-body font-semibold">{token}</p>
+                            <p className="text-meta text-muted-foreground">
+                                {isFont ? "Font family" : "Font size"}
+                            </p>
+                        </div>
 
-        return tempColors;
-    }, [state]);
+                        <div className="flex min-h-20 items-center">
+                            <p
+                                style={
+                                    isFont
+                                        ? { fontFamily: `var(--${token})` }
+                                        : { fontSize: `var(--${token})` }
+                                }
+                            >
+                                Aa Bb Cc 123
+                            </p>
+                        </div>
+
+                        <p className="border-t pt-3 text-meta text-muted-foreground">
+                            {`var(--${token})`}
+                        </p>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+function RadiusGrid() {
+    const radiusTokens = [
+        "radius",
+        "radius-button",
+        "radius-control",
+        "radius-card",
+        "radius-sm",
+        "radius-md",
+        "radius-lg",
+        "radius-xl",
+    ];
 
     return (
-        <div className="grid w-200 h-100 grid-cols-5 gap-3">
-            {colorNames?.map((elem) => (
-                <Color_Swatch
-                    key={elem.name}
-                    name={elem.name}
-                    color={elem.color}
-                ></Color_Swatch>
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
+            {radiusTokens.map((token) => (
+                <div
+                    key={token}
+                    className="space-y-4 rounded-lg border bg-card p-5"
+                >
+                    <div className="flex h-36 items-center justify-center rounded-md bg-muted">
+                        <div
+                            className="h-24 w-40 bg-primary"
+                            style={{
+                                borderRadius: `var(--${token})`,
+                            }}
+                        />
+                    </div>
+
+                    <div>
+                        <p className="text-body font-semibold">{token}</p>
+                        <p className="mt-1 text-meta text-muted-foreground">
+                            {`var(--${token})`}
+                        </p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function ButtonGrid() {
+    const variants = ["default", "outline", "destructive"] as const;
+
+    return (
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+            {variants.map((variant) => (
+                <div
+                    key={variant}
+                    className="flex flex-col items-center justify-center gap-5 rounded-lg border bg-card p-6"
+                >
+                    <Button variant={variant}>Button</Button>
+
+                    <p className="text-body font-medium capitalize">
+                        {variant}
+                    </p>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function StatusBadgeGrid() {
+    const statuses: Status[] = ["pending", "approved", "rejected"];
+
+    return (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {statuses.map((status) => (
+                <div
+                    key={status}
+                    className="flex flex-col items-center justify-center gap-4 rounded-lg border bg-card p-8"
+                >
+                    <StatusBadge status={status} />
+
+                    <p className="text-body font-semibold capitalize">
+                        {status}
+                    </p>
+                </div>
             ))}
         </div>
     );
