@@ -19,11 +19,6 @@ test("the first reading from getReadings() is newer than the second", () => {
     );
 });
 
-test("getApprovedReadings() only returns approved readings", () => {
-    const approvedReadings = getApprovedReadings();
-    expect(approvedReadings.length).toBe(4);
-});
-
 test("getApprovedReadings() only returns public fields", () => {
     const approvedReadings = getApprovedReadings();
     expect(approvedReadings[0]).toHaveProperty("id");
@@ -32,15 +27,52 @@ test("getApprovedReadings() only returns public fields", () => {
     expect(approvedReadings[0]).toHaveProperty("observedAt");
     expect(approvedReadings[0]).toHaveProperty("weather");
     expect(approvedReadings[0]).toHaveProperty("conditions");
+    expect(approvedReadings[0]).not.toHaveProperty("monitorName");
     expect(approvedReadings[0]).not.toHaveProperty("status");
     expect(approvedReadings[0]).not.toHaveProperty("notes");
     expect(approvedReadings[0]).not.toHaveProperty("photoUrl");
 });
 
-test("passing a siteId to getApprovedReadings() filters the results", () => {
-    const approvedReadings = getApprovedReadings("nashua");
-    expect(approvedReadings.length).toBe(1);
-    expect(approvedReadings[0].siteId).toBe("nashua");
+test("getApprovedReadings() only returns approved readings, newest first", () => {
+    const allReadings = getReadings();
+    const approvedReadings = getApprovedReadings();
+
+    for (let i = 1; i < approvedReadings.length; i++) {
+        expect(
+            approvedReadings[i - 1].observedAt.getTime(),
+        ).toBeGreaterThanOrEqual(approvedReadings[i].observedAt.getTime());
+    }
+
+    for (const reading of approvedReadings) {
+        const sourceReading = allReadings.find(
+            (allReading) => allReading.id === reading.id,
+        );
+
+        expect(sourceReading).toBeDefined();
+        expect(sourceReading?.status).toBe("approved");
+    }
+});
+
+test("getApprovedReadings(siteId) only returns approved readings for that site, newest first", () => {
+    const siteId = "nashua";
+    const allReadings = getReadings();
+    const approvedReadings = getApprovedReadings(siteId);
+
+    for (let i = 1; i < approvedReadings.length; i++) {
+        expect(
+            approvedReadings[i - 1].observedAt.getTime(),
+        ).toBeGreaterThanOrEqual(approvedReadings[i].observedAt.getTime());
+    }
+
+    for (const reading of approvedReadings) {
+        const sourceReading = allReadings.find(
+            (allReading) => allReading.id === reading.id,
+        );
+
+        expect(sourceReading).toBeDefined();
+        expect(sourceReading?.status).toBe("approved");
+        expect(reading.siteId).toBe(siteId);
+    }
 });
 
 const testInput = {

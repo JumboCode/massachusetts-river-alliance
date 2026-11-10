@@ -62,7 +62,7 @@ const SAMPLE: Reading[] = [
     },
     {
         id: "sample-id-5",
-        siteId: "taunton",
+        siteId: "charles",
         status: "approved",
         gageHeightFt: 6,
         observedAt: new Date("2026-10-11T14:42:00Z"),
