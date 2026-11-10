@@ -16,35 +16,31 @@ import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 export default function LeafletMap() {
     const MassachusettsCenterPoint: [number, number] = [42.378, -71.932];
     const [live, setLive] = useState(false);
-    useEffect(() => {
-        const handle = setTimeout(() => {
-            setLive(true);
-        }, 0);
 
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Leaflet can't reuse a map container, so remount it after Back
+        setLive(true);
         return () => {
-            clearTimeout(handle);
             setLive(false);
         };
     }, []);
 
+    if (!live) return null;
+
     return (
-        <div className="h-screen w-screen">
-            {live && (
-                <MapContainer
-                    center={MassachusettsCenterPoint}
-                    zoom={13}
-                    zoomControl={false}
-                    scrollWheelZoom={false}
-                    className="h-full w-full"
-                >
-                    <TileLayer
-                        attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        className="grayscale"
-                    ></TileLayer>
-                    <ZoomControl position="bottomright" />
-                </MapContainer>
-            )}
-        </div>
+        <MapContainer
+            key="massachusetts-map-instance"
+            center={MassachusettsCenterPoint}
+            zoom={8}
+            zoomControl={false}
+            className="size-full"
+        >
+            <TileLayer
+                attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                className="grayscale"
+            />
+            <ZoomControl position="bottomright" />
+        </MapContainer>
     );
 }

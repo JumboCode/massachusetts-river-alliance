@@ -15,7 +15,7 @@ import { SiteMap } from "@/components/site-map";
 
 export default function Home() {
     return (
-        <main className="w-screen h-screen">
+        <main className="h-dvh">
             <SiteMap />
         </main>
     );
