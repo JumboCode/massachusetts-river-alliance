@@ -22,9 +22,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TextLink } from "@/components/text-link";
 
-//TODO: Step 4,
-//dont reset state in useEffect
-//MICAH FOR THIS PAGE
 export default function LoginPage() {
     return <LoginForm key={useRouter().bfcacheId} />;
 }

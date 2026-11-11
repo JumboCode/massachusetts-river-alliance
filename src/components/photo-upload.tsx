@@ -6,6 +6,8 @@
  *           Date: 10/14/2026
  *         Edited by: Michele
  *           Date: 11/09/2026
+ *         Edited by: Micah
+ *           Date: 11/10/2026
  *
  *        Summary: Optional photo picker for a measurement
  *
@@ -24,9 +26,9 @@ const MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024;
 function formatFileSize(bytes: number) {
     const kilobytes = bytes / 1024;
     if (kilobytes < 1024) {
-        return "${Math.round(kilobytes)} KB";
+        return `${Math.round(kilobytes)} KB`;
     } else {
-        return "${(kilobytes / 1024).toFixed(1)} MB";
+        return `${(kilobytes / 1024).toFixed(1)} MB`;
     }
 }
 
@@ -80,19 +82,12 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 onChange={handlePhotoChange}
             />
             {value ? (
-                //TODO: Step 7, replace entire preview w one bordered row
-                //need 56px square thumbnail, rounded, cropped to fill
-                //file name (truncated) over its size (muted text)
-                //remove button at the end (calls handleRemove)
-                //MICAH
                 <div className="flex w-full items-center gap-3 rounded-md border border-input p-2">
                     <div className="relative size-14 shrink-0 overflow-hidden rounded-md">
-                        {/**NEED TO INCLUDE: set size to 56px (note --> NOT in className, but its own field), scale up image to fill entire box (hint: can be done with 1 tailwind class related to object-contain, but notice that object-contain doesnt fill the box, so maybe look through the docs for something to swap it with)*/}
-                        {/**Also notice in className (below) that we pad it with p-2, but we want no blank spaces around the image and we want it to fill the box- think about if you need padding at all!*/}
                         {previewUrl && (
                             <Image
                                 alt="Preview of uploaded photo"
-                                className="h-full w-full object-contain p-2"
+                                className="object-cover"
                                 src={previewUrl}
                                 fill
                             />
@@ -104,51 +99,14 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                             {formatFileSize(value.size)}
                         </span>
                     </div>
-
-                    {/*Here: we are currently using the Button **component** not the builtin HTML button.
-                        The Button component has 3 variants: default, outline, destructive. None of these match
-                        the Figma for what the button should look like (grey underlined text with x)
-                        and we want to **avoid** overriding styles from the outside. Another option would be to
-                        add to the component, but since the issue doesn't say to do that opt for using the built in HTML <button> tag instead.
-                        In HTML: buttons inside <form>s submit the form by default, to specify we don't want
-                        remove to submit the form we need to give the button a type, the default is type="submit" so what type should we give it?
-
-                        Next will need to give it some className styling, because we want to:
-                        1. put the X and Remove side by side, vertically centered, 4 px apart.
-                        --> what are the tailwind classes for that? look them up in the docs one by one.
-                        2. we also want to stop the button from being squeezed in, so if the filename is too long we should cut
-                        it off with "..."
-                        --> find the className styling that can do that
-                        3. we want a hand cursor on hover (normal button uses the arrow, and the Button component handles it for us, but we aren't using that)
-                        4. we want the small text size (this isnt in the docs, use text-meta)
-                        5. we want the gray text color (this also isn't in the docs, use text-muted-foreground)
-                        --> if you're curious about 4 and 5, you can look through src/app/globals.css or src/styles/theme.css, but i just kinda copy what the other similar looking things use)
-                        6. we also want it underlined (check the Reference, Remove is underlined)
-                        --> it might be underlined only on hover, but assume it's always underlined for now and we can confirm before making a PR
-
-                        Finally, we want the same onClick functionality in our new button. Include this as the final part of the opening tag.
-
-                        This is enough information to close the open tag <button (extra info from above)>
-                        Now, HTML has open and close tags i.e. <button></button>
-                        And we want an element to be inside the button. E.x.: <button>Click me!</button> 
-                        Look at the existing code for the button:
-
-                        We use the X from lucide-react. Lucide renders icons with 24x24 pixels by default (classname="size-6") 
-                        but we want 16 pixels. What size should we set the classname to? What should the tag look like?
-                        Look at the existing tag for the X below --> it is a self closing tag (technically <X></X> is the exact same as <X/> in this case)
-
-                        If we wanted a very plain button that says remove, we would do <button>Remove</button>. But we want the X and Remove to be side by side, so we need to put them both inside the button. Where should we put Remove?
-
-                        */}
                     <Button
-                        className="absolute top-2 right-2 rounded-full"
-                        variant="outline"
-                        size="icon-sm"
                         type="button"
-                        aria-label="Remove photo"
+                        variant="outline"
+                        className="border-transparent text-muted-foreground underline"
                         onClick={handleRemove}
                     >
                         <X />
+                        Remove
                     </Button>
                 </div>
             ) : (
