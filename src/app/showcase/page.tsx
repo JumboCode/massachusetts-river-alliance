@@ -115,9 +115,7 @@ function ColorGrid() {
 
                     <p className="text-body font-semibold">{token}</p>
 
-                    <p className="text-meta text-muted-foreground">
-                        {`var(--${token})`}
-                    </p>
+                    <p className="text-meta text-muted-foreground">{token}</p>
                 </div>
             ))}
         </div>
@@ -172,7 +170,7 @@ function TypographyGrid() {
                         </div>
 
                         <p className="border-t pt-3 text-meta text-muted-foreground">
-                            {`var(--${token})`}
+                            {token}
                         </p>
                     </div>
                 );
@@ -211,7 +209,7 @@ function RadiusGrid() {
                     <div>
                         <p className="text-body font-semibold">{token}</p>
                         <p className="mt-1 text-meta text-muted-foreground">
-                            {`var(--${token})`}
+                            {token}
                         </p>
                     </div>
                 </div>
