@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src\lib\arcgis\readings.ts
+ *                src/lib/arcgis/readings.ts
  *
  *         Author: Caitlyn, Tanish
  *           Date: 11/10/2026
@@ -11,7 +11,7 @@
 
 import type { PublicReading, Reading } from "./schemas";
 
-const SAMPLE: Reading[] = [
+const READINGS: Reading[] = [
     {
         id: "sample-id",
         siteId: "mystic",
@@ -76,7 +76,7 @@ const SAMPLE: Reading[] = [
         id: "sample-id-6",
         siteId: "charles",
         status: "pending",
-        gageHeightFt: 72,
+        gageHeightFt: 7.2,
         observedAt: new Date("2026-07-30T14:42:00Z"),
         monitorName: "Sample Monitor 6",
         weather: "Cloudy",
@@ -111,7 +111,7 @@ const SAMPLE: Reading[] = [
 ];
 
 export function getReadings(): Reading[] {
-    const sortedReadings = [...SAMPLE].sort(
+    const sortedReadings = [...READINGS].sort(
         (a, b) => b.observedAt.getTime() - a.observedAt.getTime(),
     );
     return sortedReadings;
@@ -123,41 +123,23 @@ export function getApprovedReadings(siteId?: string): PublicReading[] {
             reading.status === "approved" &&
             (!siteId || reading.siteId === siteId),
     );
-    return approvedReadings.map(
-        ({ id, siteId, gageHeightFt, observedAt, weather, conditions }) => ({
-            id,
-            siteId,
-            gageHeightFt,
-            observedAt,
-            weather,
-            conditions,
-        }),
-    );
+    return approvedReadings.map((reading) => ({
+        id: reading.id,
+        siteId: reading.siteId,
+        gageHeightFt: reading.gageHeightFt,
+        observedAt: reading.observedAt,
+        weather: reading.weather,
+        conditions: reading.conditions,
+    }));
 }
 
-export function createReading(input: {
-    siteId: string;
-    gageHeightFt: number;
-    observedAt: Date;
-    monitorName: string;
-    weather: string | null;
-    conditions: string | null;
-    notes: string | null;
-    photoUrl: string | null;
-}) {
+export function createReading(input: Omit<Reading, "id" | "status">): Reading {
     const reading: Reading = {
+        ...input,
         id: crypto.randomUUID(),
         status: "pending",
-        siteId: input.siteId,
-        gageHeightFt: input.gageHeightFt,
-        observedAt: input.observedAt,
-        monitorName: input.monitorName,
-        weather: input.weather,
-        conditions: input.conditions,
-        notes: input.notes,
-        photoUrl: input.photoUrl,
     };
 
-    SAMPLE.push(reading);
+    READINGS.push(reading);
     return reading;
 }

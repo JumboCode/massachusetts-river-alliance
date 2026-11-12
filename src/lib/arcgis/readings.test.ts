@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src\lib\arcgis\readings.test.ts
+ *                src/lib/arcgis/readings.test.ts
  *
  *         Author: Caitlyn, Tanish
  *           Date: 11/10/2026

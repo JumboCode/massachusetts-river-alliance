@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src\app\api\readings\route.ts
+ *                src/app/api/readings/route.ts
  *
  *         Author: Caitlyn, Tanish
  *           Date: 11/10/2026
@@ -9,7 +9,7 @@
  *
  **************************************************************/
 
-import { getApprovedReadings } from "../../../lib/arcgis/readings";
+import { getApprovedReadings } from "@/lib/arcgis/readings";
 
 export async function GET(request: Request) {
     const siteId = new URL(request.url).searchParams.get("site");
