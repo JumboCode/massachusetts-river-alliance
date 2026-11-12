@@ -9,6 +9,8 @@
  *           Date: 10/18/2026
  *      Edited by: Michele
  *           Date: 10/20/2026
+ *      Editd by: Michele
+ *           Date: 11/09/2026
  *
  *        Summary: Forgot password page
  *
@@ -16,6 +18,7 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
 import Image from "next/image";
@@ -25,6 +28,11 @@ import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 
 export default function ForgotPasswordPage() {
+    //lets form start empty by flushing cache between link navs
+    return <ForgotPasswordForm key={useRouter().bfcacheId} />;
+}
+
+function ForgotPasswordForm() {
     // Use states
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
@@ -82,13 +90,15 @@ export default function ForgotPasswordPage() {
             </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
-                    <FieldLabel htmlFor="email" required>
+                    <FieldLabel htmlFor="forgot-password-email" required>
                         Email
                     </FieldLabel>
 
                     {/* Input box */}
                     <Input
-                        id="email"
+                        id="forgot-password-email"
+                        name="email"
+                        autoComplete="username"
                         type="email"
                         placeholder="Enter Email Address"
                         value={email}
@@ -99,8 +109,7 @@ export default function ForgotPasswordPage() {
                     {/* if error, show the error message in red */}
                     {error && <FieldError>{error}</FieldError>}
                 </Field>
-
-                <div className="mt-6 flex flex-col items-center gap-1">
+                <div className="mt-6 flex flex-col items-center gap-1.25">
                     {/* Submit Button */}
                     <Button type="submit" size="lg">
                         Send Reset Link

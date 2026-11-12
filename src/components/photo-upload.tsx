@@ -4,6 +4,10 @@
  *
  *         Author: Zander, Tycho, Caitlyn
  *           Date: 10/14/2026
+ *         Edited by: Michele
+ *           Date: 11/09/2026
+ *         Edited by: Micah
+ *           Date: 11/10/2026
  *
  *        Summary: Optional photo picker for a measurement
  *
@@ -17,6 +21,16 @@ import { Upload, X } from "lucide-react";
 import Image from "next/image";
 
 const MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024;
+
+//convert small files to KB and keep larger ones in MB
+function formatFileSize(bytes: number) {
+    const kilobytes = bytes / 1024;
+    if (kilobytes < 1024) {
+        return `${Math.round(kilobytes)} KB`;
+    } else {
+        return `${(kilobytes / 1024).toFixed(1)} MB`;
+    }
+}
 
 type PhotoUploadProps = {
     value: File | null;
@@ -60,41 +74,52 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
             <FieldLabel htmlFor="photo">Photo (optional)</FieldLabel>
             <Input
                 ref={inputRef}
-                className="peer sr-only"
+                className="hidden"
                 id="photo"
+                name="photo"
                 type="file"
                 accept="image/jpeg,image/png"
                 onChange={handlePhotoChange}
             />
             {value ? (
-                <div className="relative flex h-30 w-full items-center justify-center overflow-hidden rounded-md border border-input">
-                    {previewUrl && (
-                        <Image
-                            alt="Preview of uploaded photo"
-                            className="h-full w-full object-contain p-2"
-                            src={previewUrl}
-                            fill
-                        />
-                    )}
+                <div className="flex w-full items-center gap-3 rounded-md border border-input p-2">
+                    <div className="relative size-14 shrink-0 overflow-hidden rounded-md">
+                        {previewUrl && (
+                            <Image
+                                alt="Preview of uploaded photo"
+                                className="object-cover"
+                                src={previewUrl}
+                                fill
+                            />
+                        )}
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col">
+                        <span className="truncate text-body">{value.name}</span>
+                        <span className="text-meta text-muted-foreground">
+                            {formatFileSize(value.size)}
+                        </span>
+                    </div>
                     <Button
-                        className="absolute top-2 right-2 rounded-full"
-                        variant="outline"
-                        size="icon-sm"
                         type="button"
-                        aria-label="Remove photo"
+                        variant="outline"
+                        className="border-transparent text-muted-foreground underline"
                         onClick={handleRemove}
                     >
                         <X />
+                        Remove
                     </Button>
                 </div>
             ) : (
-                <label
-                    className="flex h-30 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-input text-body underline peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50"
-                    htmlFor="photo"
+                <Button
+                    type="button"
+                    variant="outline"
+                    className="h-30 w-full flex-col items-center justify-center gap-1 rounded-md"
+                    onClick={() => inputRef.current?.click()}
                 >
-                    <Upload size={35} className="text-muted-foreground" />
-                    <span className="text-muted-foreground">Add a photo</span>
-                </label>
+                    <Upload className="size-8.75 text-muted-foreground" />
+                    <span className="underline">Add a photo</span>
+                    <span className="text-muted-foreground">JPG or PNG</span>
+                </Button>
             )}
             {error && <FieldError>{error}</FieldError>}
         </Field>
