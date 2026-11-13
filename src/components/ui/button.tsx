@@ -25,6 +25,7 @@ const buttonVariants = cva(
                     "border-input bg-card text-foreground hover:bg-accent aria-expanded:bg-accent",
                 destructive:
                     "border-input bg-card text-destructive hover:bg-destructive/10 focus-visible:border-destructive focus-visible:ring-destructive/20",
+                ghost: "border-input border-0 bg-transparent hover:bg-accent",
             },
             size: {
                 "default": "h-9 px-4 text-meta font-semibold",
