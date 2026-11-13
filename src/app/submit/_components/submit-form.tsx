@@ -4,6 +4,8 @@
  *
  *         Author: Will, Micah, Vienna, Michele
  *           Date: 10/27/2026
+ *      Edited By: Bethiah and Tycho
+ *           Date: 11/7/2026
  *
  *        Summary: Volunteer form for submitting a gage height measurement
  *
@@ -15,13 +17,27 @@ import { useState } from "react";
 import { FormCard } from "@/components/form-card";
 import { PhotoUpload } from "@/components/photo-upload";
 import { SiteSelect } from "@/components/site-select";
-import { NativeSelect } from "@/components/ui/native-select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { SITES } from "@/lib/sites";
 import Image from "next/image";
+import { format, parse } from "date-fns";
+import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
 type Measurement = {
     monitorName: string;
@@ -35,6 +51,45 @@ type Measurement = {
     notes: string;
     photo: File | null;
 };
+
+const pad = (n: number) => String(n).padStart(2, "0");
+const HOURS = Array.from({ length: 12 }, (_, i) => pad(i === 0 ? 12 : i));
+const MINUTES = Array.from({ length: 60 }, (_, i) => pad(i));
+
+function TimeColumn({
+    values,
+    selected,
+    onPick,
+    divider,
+}: {
+    values: string[];
+    selected: string;
+    onPick: (value: string) => void;
+    divider?: boolean;
+}) {
+    return (
+        <div
+            className={`flex h-60 w-16 flex-col gap-1 overflow-y-auto p-1 ${divider ? "border-r border-border" : ""}`}
+        >
+            {values.map((v) => (
+                <Button
+                    key={v}
+                    type="button"
+                    variant="outline"
+                    data-selected={v === selected}
+                    className={
+                        v === selected
+                            ? "border-transparent bg-primary text-primary-foreground hover:bg-primary"
+                            : "border-transparent bg-transparent"
+                    }
+                    onClick={() => onPick(v)}
+                >
+                    {v}
+                </Button>
+            ))}
+        </div>
+    );
+}
 
 // `now` is today's date and time in Massachusetts, from the server.
 export function SubmitForm({ now }: { now: { date: string; time: string } }) {
@@ -55,6 +110,16 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
     const [dateError, setDateError] = useState("");
     const [nameError, setNameError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [dateOpen, setDateOpen] = useState(false);
+    const today = parse(now.date, "yyyy-MM-dd", new Date());
+    const selectedDate = parse(date, "yyyy-MM-dd", new Date());
+    const [h24, min] = time.split(":").map(Number);
+    const hour = pad(h24 % 12 || 12);
+    const minute = pad(min);
+    const period = h24 >= 12 ? "PM" : "AM";
+
+    const setTimeParts = (h: string, m: string, p: string) =>
+        setTime(`${pad((Number(h) % 12) + (p === "PM" ? 12 : 0))}:${m}`);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -153,26 +218,99 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                             <FieldLabel htmlFor="date" required>
                                 Date
                             </FieldLabel>
-                            <Input
-                                id="date"
-                                type="date"
-                                value={date}
-                                aria-invalid={!!dateError}
-                                onChange={(e) => setDate(e.target.value)}
-                            />
+                            <Popover open={dateOpen} onOpenChange={setDateOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        id="date"
+                                        type="button"
+                                        variant="outline"
+                                        aria-invalid={!!dateError}
+                                        className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
+                                    >
+                                        {format(selectedDate, "MM/dd/yyyy")}
+                                        <CalendarIcon data-icon="inline-end" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        required
+                                        autoFocus
+                                        selected={selectedDate}
+                                        onSelect={(day) => {
+                                            setDate(format(day, "yyyy-MM-dd"));
+                                            setDateOpen(false);
+                                        }}
+                                        defaultMonth={selectedDate}
+                                        today={today}
+                                        disabled={{ after: today }}
+                                    />
+                                </PopoverContent>
+                            </Popover>
                             {dateError && <FieldError>{dateError}</FieldError>}
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="time" required>
                                 Time
                             </FieldLabel>
-                            <Input
-                                id="time"
-                                type="time"
-                                value={time}
-                                aria-invalid={!!timeError}
-                                onChange={(e) => setTime(e.target.value)}
-                            />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        id="time"
+                                        type="button"
+                                        variant="outline"
+                                        aria-invalid={!!timeError}
+                                        className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
+                                    >
+                                        {hour}:{minute} {period}
+                                        <ChevronDownIcon />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                    onOpenAutoFocus={() =>
+                                        document
+                                            .querySelectorAll(
+                                                '[data-selected="true"]',
+                                            )
+                                            .forEach((el) =>
+                                                el.scrollIntoView({
+                                                    block: "center",
+                                                }),
+                                            )
+                                    }
+                                >
+                                    <div className="flex">
+                                        <TimeColumn
+                                            values={HOURS}
+                                            selected={hour}
+                                            onPick={(h) =>
+                                                setTimeParts(h, minute, period)
+                                            }
+                                            divider
+                                        />
+                                        <TimeColumn
+                                            values={MINUTES}
+                                            selected={minute}
+                                            onPick={(m) =>
+                                                setTimeParts(hour, m, period)
+                                            }
+                                            divider
+                                        />
+                                        <TimeColumn
+                                            values={["AM", "PM"]}
+                                            selected={period}
+                                            onPick={(p) =>
+                                                setTimeParts(hour, minute, p)
+                                            }
+                                        />
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
                             {timeError && <FieldError>{timeError}</FieldError>}
                         </Field>
                     </div>
@@ -196,20 +334,33 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         <FieldLabel htmlFor="weather-select">
                             Weather (optional)
                         </FieldLabel>
-                        <NativeSelect
-                            id="weather-select"
+                        <Select
                             value={weather}
-                            onChange={(e) => setWeather(e.target.value)}
+                            onValueChange={(v) =>
+                                setWeather(v === "none" ? "" : (v ?? ""))
+                            }
                         >
-                            <option value="">Select weather</option>
-                            <option value="Sunny">Sunny</option>
-                            <option value="Partly cloudy">Partly cloudy</option>
-                            <option value="Overcast">Overcast</option>
-                            <option value="Light rain">Light rain</option>
-                            <option value="Heavy rain">Heavy rain</option>
-                            <option value="Snow">Snow</option>
-                            <option value="Other">Other</option>
-                        </NativeSelect>
+                            <SelectTrigger id="weather-select">
+                                <SelectValue placeholder="Select Weather" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="Sunny">Sunny</SelectItem>
+                                <SelectItem value="Partly cloudy">
+                                    Partly cloudy
+                                </SelectItem>
+                                <SelectItem value="Overcast">
+                                    Overcast
+                                </SelectItem>
+                                <SelectItem value="Light rain">
+                                    Light rain
+                                </SelectItem>
+                                <SelectItem value="Heavy rain">
+                                    Heavy rain
+                                </SelectItem>
+                                <SelectItem value="Snow">Snow</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="conditions">

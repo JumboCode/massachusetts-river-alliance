@@ -4,13 +4,21 @@
  *
  *         Author: Vienna, Helen
  *           Date: 10/16/2026
+ *      Edited By: Bethiah and Tycho
+ *           Date: 11/7/2026
  *
  *        Summary: Dropdown for picking a monitoring site
  *
  **************************************************************/
 
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { SITES } from "@/lib/sites";
 import { TextLink } from "@/components/text-link";
 
@@ -26,19 +34,18 @@ export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
             <FieldLabel htmlFor="site" required>
                 Site
             </FieldLabel>
-            <NativeSelect
-                id="site"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                aria-invalid={!!error}
-            >
-                <option value="">Select a Monitor Site</option>
-                {SITES.map((site) => (
-                    <option key={site.id} value={site.id}>
-                        {site.name}
-                    </option>
-                ))}
-            </NativeSelect>
+            <Select value={value} onValueChange={(v) => onChange(v ?? "")}>
+                <SelectTrigger id="site" aria-invalid={!!error}>
+                    <SelectValue placeholder="Select a Monitor Site" />
+                </SelectTrigger>
+                <SelectContent>
+                    {SITES.map((site) => (
+                        <SelectItem key={site.id} value={site.id}>
+                            {site.name}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
             {error && <FieldError>{error}</FieldError>}
             <TextLink
                 href="https://www.arcgis.com/apps/mapviewer/index.html"
