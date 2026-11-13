@@ -238,6 +238,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                     <Calendar
                                         mode="single"
                                         required
+                                        autoFocus
                                         selected={selectedDate}
                                         onSelect={(day) => {
                                             setDate(format(day, "yyyy-MM-dd"));
