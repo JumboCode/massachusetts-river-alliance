@@ -2,7 +2,7 @@
  *
  *        src/app/admin/_components/review-page.tsx
  *
- *         Author: Zander, Aray
+ *         Author: Zander, Aray, Tanish, Micah
  *           Date: 11/10/2026
  *
  *        Summary: Review page layout and state: status tab, filters,
@@ -19,6 +19,8 @@
 import { useState } from "react";
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { ReadingCard } from "./reading-card";
+import { ReviewSidebar } from "./review-sidebar";
+import { Button } from "@/components/ui/button";
 
 export type Filters = {
     siteId: string;
@@ -44,6 +46,15 @@ export function ReviewPage({
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const counts = {
+        pending: readings.filter((reading) => reading.status === "pending")
+            .length,
+        approved: readings.filter((reading) => reading.status === "approved")
+            .length,
+        rejected: readings.filter((reading) => reading.status === "rejected")
+            .length,
+        all: readings.length,
+    };
 
     function updateStatus(ids: string[], next: Status) {
         setReadings((prev) =>
@@ -68,7 +79,13 @@ export function ReviewPage({
     return (
         <main className="flex min-h-0 flex-1">
             {/* Sidebar */}
-            <aside className="w-51 shrink-0 border-r border-border"></aside>
+            <aside className="w-51 shrink-0 border-r border-border">
+                <ReviewSidebar
+                    status={status}
+                    counts={counts}
+                    onStatusChange={changeTab}
+                />
+            </aside>
 
             <section className="flex w-148.5 shrink-0 flex-col border-r border-border">
                 {/* Select all and filters */}
