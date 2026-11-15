@@ -2,7 +2,7 @@
  *
  *        src/app/admin/_components/review-page.tsx
  *
- *         Author: Zander, Aray
+ *         Author: Zander, Aray, Will, Grant
  *           Date: 11/10/2026
  *
  *        Summary: Review page layout and state: status tab, filters,
@@ -19,6 +19,8 @@
 import { useState } from "react";
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { ReadingCard } from "./reading-card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ActionBar } from "./bulk-action-bar";
 
 export type Filters = {
     siteId: string;
@@ -55,10 +57,12 @@ export function ReviewPage({
     // a useEffect.
     function changeTab(next: Status | "all") {
         setStatus(next);
+        setSelectedIds(new Set());
     }
 
     function changeFilters(next: Filters) {
         setFilters(next);
+        setSelectedIds(new Set());
     }
 
     const visible = readings.filter(
@@ -72,6 +76,36 @@ export function ReviewPage({
 
             <section className="flex w-148.5 shrink-0 flex-col border-r border-border">
                 {/* Select all and filters */}
+                <div className="flex h-16 shrink-0 items-center gap-4 border-b border-border pr-2 pl-6">
+                    <Checkbox
+                        checked={
+                            visible.length > 0 &&
+                            visible.every((r) => selectedIds.has(r.id))
+                                ? true
+                                : visible.some((r) => selectedIds.has(r.id))
+                                  ? "indeterminate"
+                                  : false
+                        }
+                        onCheckedChange={(checked) => {
+                            setSelectedIds((prevIds) => {
+                                const newIds = new Set(prevIds);
+
+                                visible.forEach((r) => {
+                                    if (checked) {
+                                        newIds.add(r.id);
+                                    } else {
+                                        newIds.delete(r.id);
+                                    }
+                                });
+
+                                return newIds;
+                            });
+                        }}
+                    />
+                    <p className="text-body text-muted-foreground">
+                        Select All
+                    </p>
+                </div>
                 <div className="border-b border-border px-6 py-4"></div>
 
                 <ul className="flex flex-1 flex-col">
@@ -88,7 +122,21 @@ export function ReviewPage({
                                     )
                                 }
                                 checked={selectedIds.has(reading.id)}
-                                onCheckedChange={() => {}}
+                                onCheckedChange={() => {
+                                    if (selectedIds.has(reading.id)) {
+                                        setSelectedIds((prevIds) => {
+                                            const newIds = new Set(prevIds);
+                                            newIds.delete(reading.id);
+                                            return newIds;
+                                        });
+                                    } else {
+                                        setSelectedIds((prevIds) => {
+                                            const newIds = new Set(prevIds);
+                                            newIds.add(reading.id);
+                                            return newIds;
+                                        });
+                                    }
+                                }}
                                 onStatusChange={(next) =>
                                     updateStatus([reading.id], next)
                                 }
@@ -98,6 +146,20 @@ export function ReviewPage({
                 </ul>
 
                 {/* Bulk action bar */}
+                {selectedIds.size > 0 && (
+                    <ActionBar
+                        count={selectedIds.size}
+                        onClear={() => setSelectedIds(new Set())}
+                        onApprove={() => {
+                            updateStatus([...selectedIds], "approved");
+                            setSelectedIds(new Set());
+                        }}
+                        onReject={() => {
+                            updateStatus([...selectedIds], "rejected");
+                            setSelectedIds(new Set());
+                        }}
+                    ></ActionBar>
+                )}
             </section>
 
             {/* Map */}
