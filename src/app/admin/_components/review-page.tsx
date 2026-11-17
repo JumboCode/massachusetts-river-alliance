@@ -3,8 +3,8 @@
  *        src/app/admin/_components/review-page.tsx
  *
  *         Author: Zander, Aray
- *         Edited: Tycho
- *           Date: 11/10/2026
+ *         Edited: Tycho, Michele
+ *           Date: 11/17/2026
  *
  *        Summary: Review page layout and state: status tab, filters,
  *                 expanded row and selection
@@ -56,9 +56,10 @@ export function ReviewPage({
     }
 
     // Side effects of switching tabs or filters go in these handlers, not in
-    // a useEffect.
+    // a useEffect. Reset filters to default when tabs change.
     function changeTab(next: Status | "all") {
         setStatus(next);
+        setFilters(DEFAULT_FILTERS);
     }
 
     function changeFilters(next: Filters) {
@@ -85,6 +86,14 @@ export function ReviewPage({
         return now.getTime() - r.observedAt.getTime() <= days * MS_PER_DAY;
     });
 
+    const sortedObservedAt = byDate.toSorted((a, b) => {
+        if (filters.sort === "newest") {
+            return b.observedAt.getTime() - a.observedAt.getTime();
+        } else {
+            return a.observedAt.getTime() - b.observedAt.getTime();
+        }
+    });
+
     return (
         <main className="flex min-h-0 flex-1">
             {/* Sidebar */}
@@ -96,7 +105,7 @@ export function ReviewPage({
                     <ReviewFilters filters={filters} onChange={changeFilters} />
                 </div>
                 <ul className="flex flex-1 flex-col">
-                    {byDate.map((reading) => (
+                    {sortedObservedAt.map((reading) => (
                         <li key={reading.id}>
                             <ReadingCard
                                 reading={reading}
