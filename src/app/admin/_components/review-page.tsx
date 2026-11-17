@@ -3,6 +3,7 @@
  *        src/app/admin/_components/review-page.tsx
  *
  *         Author: Zander, Aray
+ *         Edited: Tycho
  *           Date: 11/10/2026
  *
  *        Summary: Review page layout and state: status tab, filters,
@@ -19,7 +20,8 @@
 import { useState } from "react";
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { ReadingCard } from "./reading-card";
-
+import { ReviewFilters } from "./review-filters";
+import { dateToMassTime } from "@/lib/time";
 export type Filters = {
     siteId: string;
     date: "today" | "week" | "month" | "all";
@@ -31,6 +33,8 @@ export const DEFAULT_FILTERS: Filters = {
     date: "all",
     sort: "newest",
 };
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export function ReviewPage({
     readings: initialReadings,
@@ -65,6 +69,22 @@ export function ReviewPage({
         (r) => status === "all" || r.status === status,
     );
 
+    const byLocation = visible.filter(
+        (r) => filters.siteId === "all" || r.siteId === filters.siteId,
+    );
+
+    const byDate = byLocation.filter((r) => {
+        if (filters.date === "all") return true;
+
+        if (filters.date === "today") {
+            return (
+                dateToMassTime(r.observedAt).date === dateToMassTime(now).date
+            );
+        }
+        const days = filters.date === "week" ? 7 : 30;
+        return now.getTime() - r.observedAt.getTime() <= days * MS_PER_DAY;
+    });
+
     return (
         <main className="flex min-h-0 flex-1">
             {/* Sidebar */}
@@ -72,10 +92,11 @@ export function ReviewPage({
 
             <section className="flex w-148.5 shrink-0 flex-col border-r border-border">
                 {/* Select all and filters */}
-                <div className="border-b border-border px-6 py-4"></div>
-
+                <div className="border-b border-border px-6 py-4">
+                    <ReviewFilters filters={filters} onChange={changeFilters} />
+                </div>
                 <ul className="flex flex-1 flex-col">
-                    {visible.map((reading) => (
+                    {byDate.map((reading) => (
                         <li key={reading.id}>
                             <ReadingCard
                                 reading={reading}
