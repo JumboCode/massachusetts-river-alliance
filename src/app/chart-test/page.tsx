@@ -5,13 +5,13 @@
  *         Author: Will, Bethiah
  *           Date: 10/27/2026
  *
- *        Summary: Test page for measurement history card
+ *        Summary: Test page for the measurement history chart
  *
  **************************************************************/
 
 import {
     ChartReading,
-    MeasurementHistoryCard,
+    MeasurementHistoryChart,
 } from "@/components/measurement-history-chart";
 
 const READINGS: ChartReading[] = [
@@ -58,7 +58,5 @@ const READINGS: ChartReading[] = [
 ];
 
 export default function ChartTestPage() {
-    return (
-        <MeasurementHistoryCard readings={READINGS}></MeasurementHistoryCard>
-    );
+    return <MeasurementHistoryChart readings={READINGS} />;
 }

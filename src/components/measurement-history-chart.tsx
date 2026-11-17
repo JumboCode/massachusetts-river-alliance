@@ -5,16 +5,24 @@
  *         Author: Will and Bethiah
  *           Date: 11/1/2026
  *
- *        Summary: Measurement history card for gauge measurement submissions
+ *        Summary: Line chart of a station's gage height readings over time
  *
  **************************************************************/
 "use client";
 import type { PublicReading } from "@/lib/arcgis/schemas";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 import {
-    ChartConfig,
+    CartesianGrid,
+    Line,
+    LineChart,
+    ReferenceDot,
+    XAxis,
+    YAxis,
+} from "recharts";
+import {
+    type ChartConfig,
     ChartContainer,
     ChartTooltip,
+    ChartTooltipContent,
 } from "@/components/ui/chart";
 import { formatMassTime, TIME_ZONE } from "@/lib/time";
 
@@ -23,74 +31,89 @@ export type ChartReading = Pick<
     "id" | "gageHeightFt" | "observedAt"
 >;
 
-export function MeasurementHistoryCard({
+// Keyed by the data key, so ChartContainer defines --color-ft.
+const chartConfig = {
+    ft: { label: "Gage height", color: "var(--chart-1)" },
+} satisfies ChartConfig;
+
+const dayFormat = new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE,
+    month: "short",
+    day: "numeric",
+});
+
+export function MeasurementHistoryChart({
     readings,
 }: {
     readings: ChartReading[];
 }) {
-    const conf: ChartConfig = {
-        gageHeightFt: {
-            label: "Gage height (ft)",
-            color: "var(--chart-1)",
-        },
-    };
+    if (readings.length === 0) {
+        return (
+            <p className="text-meta text-muted-foreground">No readings yet</p>
+        );
+    }
 
-    type ChartData = {
-        t: number;
-        ft: number;
-    };
+    // Oldest first, so the line runs left to right in time.
+    const data = readings
+        .map((r) => ({ t: r.observedAt.getTime(), ft: r.gageHeightFt }))
+        .sort((a, b) => a.t - b.t);
+    const latest = data[data.length - 1];
 
-    const data: ChartData[] = readings.map((r) => ({
-        t: r.observedAt.getTime(),
-        ft: r.gageHeightFt,
-    }));
-
-    const formatDate = (t: number) =>
-        new Date(t).toLocaleDateString("en-US", {
-            timeZone: TIME_ZONE,
-            month: "short",
-            day: "numeric",
-        });
-    return readings && readings.length > 0 ? (
-        <ChartContainer config={conf}>
-            <LineChart data={data}>
+    return (
+        <ChartContainer config={chartConfig}>
+            <LineChart data={data} margin={{ right: 12 }}>
                 <CartesianGrid vertical={false} />
                 <XAxis
                     dataKey="t"
-                    tickFormatter={formatDate}
+                    type="number"
+                    scale="time"
+                    domain={["dataMin", "dataMax"]}
+                    tickFormatter={(t: number) => dayFormat.format(t)}
                     tickLine={false}
                 />
                 <YAxis
-                    tickFormatter={(v) => `${Number(v).toFixed(1)} ft`}
+                    domain={["auto", "auto"]}
+                    tickFormatter={(v: number) => `${v.toFixed(2)} ft`}
                     tickLine={false}
                     axisLine={false}
                 />
                 <ChartTooltip
-                    labelFormatter={(t) => formatMassTime(t)}
-                    formatter={(ft) => {
-                        return ft;
-                    }}
+                    content={
+                        <ChartTooltipContent
+                            hideIndicator
+                            labelFormatter={(_, payload) =>
+                                formatMassTime(new Date(payload[0]?.payload.t))
+                            }
+                            formatter={(ft) => (
+                                <span className="text-section">
+                                    {Number(ft).toFixed(2)} ft
+                                </span>
+                            )}
+                        />
+                    }
                 />
                 <Line
                     dataKey="ft"
-                    stroke="var(--chart-1)"
+                    stroke="var(--color-ft)"
                     strokeWidth={2}
-                    dot={{
-                        r: 4,
-                        fill: "var(--color-1)",
-                        stroke: "white",
-                        strokeWidth: 2,
-                    }}
+                    dot={false}
                     activeDot={{
                         r: 6,
-                        fill: "var(--color-1)",
-                        stroke: "white",
+                        fill: "var(--color-ft)",
+                        stroke: "var(--card)",
                         strokeWidth: 2,
                     }}
                 />
+                {/* Marks the current level. */}
+                <ReferenceDot
+                    x={latest.t}
+                    y={latest.ft}
+                    r={4}
+                    fill="var(--color-ft)"
+                    stroke="var(--card)"
+                    strokeWidth={2}
+                />
             </LineChart>
         </ChartContainer>
-    ) : (
-        <p>No readings yet</p>
     );
 }
