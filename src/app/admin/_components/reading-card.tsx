@@ -12,9 +12,11 @@
 
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { SITES } from "@/lib/sites";
+import { StatusDropdown } from "./status-dropdown";
 
 export function ReadingCard({
     reading,
+    onStatusChange,
 }: {
     reading: Reading;
     expanded: boolean;
@@ -31,6 +33,7 @@ export function ReadingCard({
             <span className="ml-auto text-body text-foreground">
                 {reading.gageHeightFt.toFixed(2)} ft
             </span>
+            <StatusDropdown status={reading.status} onChange={onStatusChange} />
         </div>
     );
 }
