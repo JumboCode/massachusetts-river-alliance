@@ -25,6 +25,9 @@ jobs:
         # Forked PRs can't read secrets, so only deploy branches in this repo.
         if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
         runs-on: ubuntu-latest
+        environment:
+            name: ${{ github.event_name == 'push' && 'Production' || 'Preview' }}
+            url: ${{ steps.deploy.outputs.url }}
         steps:
             - uses: actions/checkout@v7
             - uses: actions/setup-node@v7
@@ -36,6 +39,8 @@ jobs:
             - name: Build
               run: npx vercel@64.1.0 build $PROD_FLAG --token=${{ secrets.VERCEL_TOKEN }}
             - name: Deploy
+              id: deploy
               run: |
                   url=$(npx vercel@64.1.0 deploy --prebuilt $PROD_FLAG --token=${{ secrets.VERCEL_TOKEN }})
                   echo "Deployed: $url" >> "$GITHUB_STEP_SUMMARY"
+                  echo "url=$url" >> "$GITHUB_OUTPUT"

@@ -24,7 +24,7 @@ export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
     return (
         <Field>
             <FieldLabel htmlFor="site" required>
-                SITE
+                Site
             </FieldLabel>
             <NativeSelect
                 id="site"

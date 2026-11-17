@@ -27,7 +27,7 @@ const montserrat = Montserrat({
 });
 
 // "lofi" or "hifi". Both themes live in src/styles/theme.css.
-const THEME = "lofi";
+const THEME = "hifi";
 
 export const metadata: Metadata = {
     title: "Massachusetts Rivers Alliance",

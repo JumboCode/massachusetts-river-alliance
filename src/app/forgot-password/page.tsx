@@ -9,6 +9,8 @@
  *           Date: 10/18/2026
  *      Edited by: Michele
  *           Date: 10/20/2026
+ *      Edited by: Michele
+ *           Date: 11/09/2026
  *
  *        Summary: Forgot password page
  *
@@ -16,6 +18,7 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
 import Image from "next/image";
@@ -24,25 +27,33 @@ import { Input } from "@/components/ui/input";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 
+import { z } from "zod";
+import { emailSchema } from "@/lib/arcgis/schemas";
+
+const forgotPasswordSchema = z.object({
+    email: emailSchema,
+});
+
 export default function ForgotPasswordPage() {
-    // Use states
+    // Remount the form on each link visit so it starts empty
+    return <ForgotPasswordForm key={useRouter().bfcacheId} />;
+}
+
+function ForgotPasswordForm() {
     const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
     const [sent, setSent] = useState(false);
 
     function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-        // check email, set error or set sent
         e.preventDefault();
 
-        // gets rid of the extra spaces at the beginning at end, so people
-        // cant put in blank emails
-        const trimmed = email.trim();
-        if (trimmed === "") {
-            setError("This field is required");
+        const result = forgotPasswordSchema.safeParse({ email });
+        if (!result.success) {
+            setErrors(z.flattenError(result.error).fieldErrors);
             return;
         }
 
-        setError("");
+        setErrors({});
         setSent(true);
     }
 
@@ -82,25 +93,26 @@ export default function ForgotPasswordPage() {
             </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
-                    <FieldLabel htmlFor="email" required>
-                        EMAIL
+                    <FieldLabel htmlFor="forgot-password-email" required>
+                        Email
                     </FieldLabel>
 
                     {/* Input box */}
                     <Input
-                        id="email"
+                        id="forgot-password-email"
+                        name="email"
+                        autoComplete="username"
                         type="email"
                         placeholder="Enter Email Address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         // if they do not submit anything, make border red
-                        aria-invalid={!!error}
+                        aria-invalid={!!errors.email}
                     />
                     {/* if error, show the error message in red */}
-                    {error && <FieldError>{error}</FieldError>}
+                    {errors.email && <FieldError>{errors.email[0]}</FieldError>}
                 </Field>
-
-                <div className="mt-6 flex flex-col items-center gap-1">
+                <div className="mt-6 flex flex-col items-center gap-1.25">
                     {/* Submit Button */}
                     <Button type="submit" size="lg">
                         Send Reset Link
