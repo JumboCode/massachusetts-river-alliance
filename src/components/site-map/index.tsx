@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src/components/index.tsx
+ *                src/components/site-map/index.tsx
  *
  *         Author: Grant and Micah
  *           Date: 11/1/2026

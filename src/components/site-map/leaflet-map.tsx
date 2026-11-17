@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src/components/leaflet-map.tsx
+ *                src/components/site-map/leaflet-map.tsx
  *
  *         Author: Grant and Micah
  *           Date: 11/1/2026
@@ -13,8 +13,9 @@ import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 
+const MA_CENTER: [number, number] = [42.378, -71.932];
+
 export default function LeafletMap() {
-    const MassachusettsCenterPoint: [number, number] = [42.378, -71.932];
     const [live, setLive] = useState(false);
 
     useEffect(() => {
@@ -29,15 +30,14 @@ export default function LeafletMap() {
 
     return (
         <MapContainer
-            key="massachusetts-map-instance"
-            center={MassachusettsCenterPoint}
+            center={MA_CENTER}
             zoom={8}
             zoomControl={false}
             className="size-full"
         >
             <TileLayer
-                attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                 className="grayscale"
             />
             <ZoomControl position="bottomright" />
