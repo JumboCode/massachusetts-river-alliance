@@ -122,6 +122,8 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="monitor-name"
+                            name="monitorName"
+                            autoComplete="name"
                             placeholder="Enter your name"
                             value={monitorName}
                             aria-invalid={!!nameError}
@@ -135,6 +137,8 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="monitor-email"
+                            name="monitorEmail"
+                            autoComplete="email"
                             type="email"
                             placeholder="Enter Email Address"
                             value={monitorEmail}
@@ -183,6 +187,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                         <Input
                             id="gage-height"
+                            name="gageHeight"
                             type="number"
                             step="0.01"
                             placeholder="e.g. 4.82"
@@ -217,6 +222,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Textarea
                             id="conditions"
+                            name="conditions"
                             rows={4}
                             value={conditions}
                             placeholder="Add context about stream conditions"
@@ -230,6 +236,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="notes"
+                            name="notes"
                             placeholder="Add context about the reading"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}

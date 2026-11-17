@@ -4,9 +4,9 @@
  *
  *         Author: Zander, Tycho, Caitlyn
  *           Date: 10/14/2026
- *         Edited by: Michele
+ *      Edited by: Michele
  *           Date: 11/09/2026
- *         Edited by: Micah
+ *      Edited by: Micah
  *           Date: 11/10/2026
  *
  *        Summary: Optional photo picker for a measurement
@@ -22,14 +22,13 @@ import Image from "next/image";
 
 const MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024;
 
-//convert small files to KB and keep larger ones in MB
+// Convert small files to KB and keep larger ones in MB
 function formatFileSize(bytes: number) {
     const kilobytes = bytes / 1024;
     if (kilobytes < 1024) {
-        return `${Math.round(kilobytes)} KB`;
-    } else {
-        return `${(kilobytes / 1024).toFixed(1)} MB`;
+        return `${Math.max(1, Math.round(kilobytes))} KB`;
     }
+    return `${(kilobytes / 1024).toFixed(1)} MB`;
 }
 
 type PhotoUploadProps = {
@@ -75,8 +74,8 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
             <Input
                 ref={inputRef}
                 className="hidden"
-                id="photo"
                 name="photo"
+                tabIndex={-1}
                 type="file"
                 accept="image/jpeg,image/png"
                 onChange={handlePhotoChange}
@@ -111,14 +110,20 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
                 </div>
             ) : (
                 <Button
+                    id="photo"
                     type="button"
                     variant="outline"
+                    aria-invalid={!!error}
                     className="h-30 w-full flex-col items-center justify-center gap-1 rounded-md"
                     onClick={() => inputRef.current?.click()}
                 >
                     <Upload className="size-8.75 text-muted-foreground" />
-                    <span className="underline">Add a photo</span>
-                    <span className="text-muted-foreground">JPG or PNG</span>
+                    <span className="text-body font-medium underline">
+                        Add a photo
+                    </span>
+                    <span className="font-normal text-muted-foreground">
+                        JPG or PNG
+                    </span>
                 </Button>
             )}
             {error && <FieldError>{error}</FieldError>}

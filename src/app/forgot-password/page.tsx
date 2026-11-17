@@ -9,7 +9,7 @@
  *           Date: 10/18/2026
  *      Edited by: Michele
  *           Date: 10/20/2026
- *      Editd by: Michele
+ *      Edited by: Michele
  *           Date: 11/09/2026
  *
  *        Summary: Forgot password page
@@ -28,7 +28,7 @@ import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 
 export default function ForgotPasswordPage() {
-    //lets form start empty by flushing cache between link navs
+    // Remount the form on each link visit so it starts empty
     return <ForgotPasswordForm key={useRouter().bfcacheId} />;
 }
 
