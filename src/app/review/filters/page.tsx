@@ -18,42 +18,42 @@ const SUBMISSIONS = [
     {
         id: 1,
         siteId: "charles",
-        gageHeight: 4.82,
+        gageHeightFt: 4.82,
         status: "Pending",
         daysAgo: 0,
     },
     {
         id: 2,
         siteId: "charles",
-        gageHeight: 4.76,
+        gageHeightFt: 4.76,
         status: "Approved",
         daysAgo: 3,
     },
     {
         id: 3,
         siteId: "nashua",
-        gageHeight: 3.21,
+        gageHeightFt: 3.21,
         status: "Pending",
         daysAgo: 1,
     },
     {
         id: 4,
         siteId: "nashua",
-        gageHeight: 3.05,
+        gageHeightFt: 3.05,
         status: "Rejected",
         daysAgo: 12,
     },
     {
         id: 5,
         siteId: "mystic",
-        gageHeight: 2.4,
+        gageHeightFt: 2.4,
         status: "Approved",
         daysAgo: 5,
     },
     {
         id: 6,
         siteId: "mystic",
-        gageHeight: 2.62,
+        gageHeightFt: 2.62,
         status: "Pending",
         daysAgo: 45,
     },
@@ -121,7 +121,7 @@ export default function ReviewFiltersPage() {
             {shown.map((s) => (
                 <p key={s.id}>
                     {SITES.find((site) => site.id === s.siteId)?.name} |{" "}
-                    {s.gageHeight} ft | {s.status} | {s.daysAgo} days ago
+                    {s.gageHeightFt} ft | {s.status} | {s.daysAgo} days ago
                 </p>
             ))}
             {shown.length === 0 && <p>No submissions match these filters</p>}
