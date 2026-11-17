@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { format, parse } from "date-fns";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
@@ -46,11 +47,13 @@ const HOURS = Array.from({ length: 12 }, (_, i) => pad(i === 0 ? 12 : i));
 const MINUTES = Array.from({ length: 60 }, (_, i) => pad(i));
 
 function TimeColumn({
+    label,
     values,
     selected,
     onPick,
     divider,
 }: {
+    label: string;
     values: string[];
     selected: string;
     onPick: (value: string) => void;
@@ -58,13 +61,19 @@ function TimeColumn({
 }) {
     return (
         <div
-            className={`flex h-60 w-16 flex-col gap-1 overflow-y-auto p-1 ${divider ? "border-r border-border" : ""}`}
+            role="group"
+            aria-label={label}
+            className={cn(
+                "flex h-60 w-16 flex-col gap-1 overflow-y-auto p-1",
+                divider && "border-r border-border",
+            )}
         >
             {values.map((v) => (
                 <Button
                     key={v}
                     type="button"
                     variant="outline"
+                    aria-pressed={v === selected}
                     data-selected={v === selected}
                     className={
                         v === selected
@@ -250,6 +259,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                         }}
                                         defaultMonth={selectedDate}
                                         today={today}
+                                        endMonth={today}
                                         disabled={{ after: today }}
                                     />
                                 </PopoverContent>
@@ -278,20 +288,25 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                 <PopoverContent
                                     className="w-auto p-0"
                                     align="start"
-                                    onOpenAutoFocus={() =>
-                                        document
-                                            .querySelectorAll(
-                                                '[data-selected="true"]',
-                                            )
-                                            .forEach((el) =>
-                                                el.scrollIntoView({
-                                                    block: "center",
-                                                }),
-                                            )
-                                    }
+                                    // Scroll each column to its value and focus the selected hour.
+                                    onOpenAutoFocus={(event) => {
+                                        event.preventDefault();
+                                        const selected = (
+                                            event.currentTarget as HTMLElement
+                                        ).querySelectorAll<HTMLElement>(
+                                            '[data-selected="true"]',
+                                        );
+                                        selected.forEach((el) =>
+                                            el.scrollIntoView({
+                                                block: "center",
+                                            }),
+                                        );
+                                        selected[0]?.focus();
+                                    }}
                                 >
                                     <div className="flex">
                                         <TimeColumn
+                                            label="Hour"
                                             values={HOURS}
                                             selected={hour}
                                             onPick={(h) =>
@@ -300,6 +315,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                             divider
                                         />
                                         <TimeColumn
+                                            label="Minute"
                                             values={MINUTES}
                                             selected={minute}
                                             onPick={(m) =>
@@ -308,6 +324,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                             divider
                                         />
                                         <TimeColumn
+                                            label="AM or PM"
                                             values={["AM", "PM"]}
                                             selected={period}
                                             onPick={(p) =>
@@ -352,9 +369,9 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                             }
                         >
                             <SelectTrigger id="weather-select">
-                                <SelectValue placeholder="Select Weather" />
+                                <SelectValue placeholder="Select weather" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent position="popper">
                                 <SelectItem value="none">None</SelectItem>
                                 <SelectItem value="Sunny">Sunny</SelectItem>
                                 <SelectItem value="Partly cloudy">

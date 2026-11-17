@@ -38,7 +38,7 @@ export function SiteSelect({ value, onChange, error }: SiteSelectProps) {
                 <SelectTrigger id="site" aria-invalid={!!error}>
                     <SelectValue placeholder="Select a Monitor Site" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper">
                     {SITES.map((site) => (
                         <SelectItem key={site.id} value={site.id}>
                             {site.name}
