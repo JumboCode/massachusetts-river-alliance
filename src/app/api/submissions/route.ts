@@ -9,6 +9,7 @@
  *
  **************************************************************/
 
+import { z } from "zod";
 import { submissionSchema } from "@/lib/arcgis/schemas";
 
 export async function POST(request: Request) {
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
 
     if (!bodyResult) {
         return Response.json(
-            { error: "Invalid JSON Payload" },
+            { errors: { form: ["Invalid JSON payload"] } },
             { status: 400 },
         );
     }
@@ -24,8 +25,10 @@ export async function POST(request: Request) {
     const result = submissionSchema.safeParse(bodyResult);
 
     if (!result.success) {
-        const fieldErrors = result.error.flatten(bodyResult.error).fieldErrors;
-        return Response.json(fieldErrors, { status: 400 });
+        return Response.json(
+            { errors: z.flattenError(result.error).fieldErrors },
+            { status: 400 },
+        );
     }
 
     return Response.json({ message: "Submission received" }, { status: 201 });

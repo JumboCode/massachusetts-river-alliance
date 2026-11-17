@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *                src/lib/arcgis/schemas.ts
+ *          src/lib/arcgis/schemas.ts
  *
  *         Author: Zander
  *           Date: 10/28/2026

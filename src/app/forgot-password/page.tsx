@@ -25,11 +25,10 @@ import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 
 import { z } from "zod";
-import { emailSchema, REQUIRED } from "@/lib/arcgis/schemas";
+import { emailSchema } from "@/lib/arcgis/schemas";
 
 const forgotPasswordSchema = z.object({
     email: emailSchema,
-    password: z.string({ error: REQUIRED }).min(1, REQUIRED),
 });
 
 export default function ForgotPasswordPage() {
