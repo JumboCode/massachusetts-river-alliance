@@ -116,26 +116,53 @@
 }
 
 [data-theme="hifi"] {
+    /* These match the design. Some pairs fail WCAG AA contrast (white on
+       primary ~2.6:1, white on destructive ~2.7:1, warning pill ~2.5:1,
+       muted-foreground on card ~4.1:1); kept until the design is revisited. */
     --background: #e7ecef;
     --foreground: #1a2c37;
     --card: #ffffff;
+    --card-foreground: #1a2c37;
     --popover: #ffffff;
+    --popover-foreground: #1a2c37;
     --primary: #5fa8d3;
     --primary-foreground: #ffffff;
     --primary-hover: #829cbc;
-    --input: #829cbc;
-    --ring: #5fa8d3;
+    --accent-foreground: #1a2c37;
+    --muted: #f2f6f8;
     --muted-foreground: #6d808c;
     --label-foreground: #404f5a;
     --destructive: #ea7e7e;
 
+    --success: #e3f3e8;
+    --success-foreground: #2f7d4b;
+    --warning: #cae9ff;
+    --warning-foreground: #6096ba;
+
+    --border: #e7ecef;
+    --input: #829cbc;
+    --ring: #5fa8d3;
+
+    --chart-1: #1b4965;
+
     --font-family-heading: var(--font-montserrat), var(--font-family-sans);
 
+    --text-label: 11px;
+    --text-label--line-height: calc(14 / 11);
+    --text-label--letter-spacing: 0.08em;
+    --text-label--font-weight: 700;
     --text-field-label--font-weight: 800;
     --text-button: 15px;
     --text-button--line-height: normal;
     --text-button--letter-spacing: 0.08em;
     --text-button--font-weight: 800;
+    --text-ui--line-height: calc(18 / 13);
+    --text-section: 16px;
+    --text-section--line-height: calc(22 / 16);
+    --text-section--font-weight: 700;
+    --text-heading: 24px;
+    --text-heading--line-height: calc(30 / 24);
+    --text-heading--font-weight: 700;
     --text-title: 32px;
     --text-title--line-height: normal;
     --text-title--letter-spacing: 0.08em;
@@ -144,6 +171,9 @@
     --text-display--line-height: 1;
     --text-display--letter-spacing: 0.08em;
     --text-display--font-weight: 700;
+    --text-reading: 34px;
+    --text-reading--line-height: calc(40 / 34);
+    --text-reading--font-weight: 700;
 
     --radius-card: 10px;
 }

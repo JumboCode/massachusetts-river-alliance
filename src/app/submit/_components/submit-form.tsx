@@ -4,6 +4,8 @@
  *
  *         Author: Will, Micah, Vienna, Michele
  *           Date: 10/27/2026
+ *      Edited By: Bethiah and Tycho
+ *           Date: 11/7/2026
  *
  *        Summary: Volunteer form for submitting a gage height measurement
  *
@@ -15,26 +17,77 @@ import { useState } from "react";
 import { FormCard } from "@/components/form-card";
 import { PhotoUpload } from "@/components/photo-upload";
 import { SiteSelect } from "@/components/site-select";
-import { NativeSelect } from "@/components/ui/native-select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { SITES } from "@/lib/sites";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { format, parse } from "date-fns";
+import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
-type Measurement = {
-    monitorName: string;
-    monitorEmail: string;
-    siteId: string;
-    date: string;
-    time: string;
-    gageHeight: number;
-    weather: string;
-    conditions: string;
-    notes: string;
-    photo: File | null;
-};
+import { z } from "zod";
+import { submissionSchema } from "@/lib/arcgis/schemas";
+
+const pad = (n: number) => String(n).padStart(2, "0");
+const HOURS = Array.from({ length: 12 }, (_, i) => pad(i === 0 ? 12 : i));
+const MINUTES = Array.from({ length: 60 }, (_, i) => pad(i));
+
+function TimeColumn({
+    label,
+    values,
+    selected,
+    onPick,
+    divider,
+}: {
+    label: string;
+    values: string[];
+    selected: string;
+    onPick: (value: string) => void;
+    divider?: boolean;
+}) {
+    return (
+        <div
+            role="group"
+            aria-label={label}
+            className={cn(
+                "flex h-60 w-16 flex-col gap-1 overflow-y-auto p-1",
+                divider && "border-r border-border",
+            )}
+        >
+            {values.map((v) => (
+                <Button
+                    key={v}
+                    type="button"
+                    variant="outline"
+                    aria-pressed={v === selected}
+                    data-selected={v === selected}
+                    className={
+                        v === selected
+                            ? "border-transparent bg-primary text-primary-foreground hover:bg-primary"
+                            : "border-transparent bg-transparent"
+                    }
+                    onClick={() => onPick(v)}
+                >
+                    {v}
+                </Button>
+            ))}
+        </div>
+    );
+}
 
 // `now` is today's date and time in Massachusetts, from the server.
 export function SubmitForm({ now }: { now: { date: string; time: string } }) {
@@ -44,56 +97,73 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
     const [time, setTime] = useState(now.time);
     const [site, setSite] = useState("");
     const [photo, setPhoto] = useState<File | null>(null);
-    const [gageHeight, setGageHeight] = useState("");
+    const [gageHeightFt, setGageHeightFt] = useState("");
     const [weather, setWeather] = useState("");
     const [conditions, setConditions] = useState("");
     const [notes, setNotes] = useState("");
-    const [submission, setSubmission] = useState<Measurement | null>(null);
-    const [siteError, setSiteError] = useState("");
-    const [gageError, setGageError] = useState("");
-    const [timeError, setTimeError] = useState("");
-    const [dateError, setDateError] = useState("");
-    const [nameError, setNameError] = useState("");
-    const [emailError, setEmailError] = useState("");
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
+    const [dateOpen, setDateOpen] = useState(false);
+    const today = parse(now.date, "yyyy-MM-dd", new Date());
+    const selectedDate = parse(date, "yyyy-MM-dd", new Date());
+    const [h24, min] = time.split(":").map(Number);
+    const hour = pad(h24 % 12 || 12);
+    const minute = pad(min);
+    const period = h24 >= 12 ? "PM" : "AM";
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const setTimeParts = (h: string, m: string, p: string) =>
+        setTime(`${pad((Number(h) % 12) + (p === "PM" ? 12 : 0))}:${m}`);
+
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const nameMissing = monitorName === "";
-        const emailMissing = monitorEmail === "";
-        const dateMissing = date === "";
-        const timeMissing = time === "";
-        const siteMissing = site === "";
-        const gageMissing = gageHeight === "";
-        setNameError(nameMissing ? "This field is required" : "");
-        setEmailError(emailMissing ? "This field is required" : "");
-        setDateError(dateMissing ? "This field is required" : "");
-        setTimeError(timeMissing ? "This field is required" : "");
-        setSiteError(siteMissing ? "This field is required" : "");
-        setGageError(gageMissing ? "This field is required" : "");
-        if (
-            siteMissing ||
-            gageMissing ||
-            nameMissing ||
-            emailMissing ||
-            dateMissing ||
-            timeMissing
-        ) {
-            setSubmission(null);
+        setIsSubmitted(false);
+
+        const result = submissionSchema.safeParse({
+            siteId: site,
+            gageHeightFt:
+                gageHeightFt === "" ? undefined : Number(gageHeightFt),
+            date,
+            time,
+            monitorName,
+            monitorEmail,
+            weather,
+            conditions,
+            notes,
+        });
+
+        if (!result.success) {
+            setErrors(z.flattenError(result.error).fieldErrors);
             return;
         }
 
-        setSubmission({
-            siteId: site,
-            gageHeight: Number(gageHeight),
-            weather: weather,
-            conditions: conditions,
-            notes: notes,
-            photo: photo,
-            monitorName: monitorName,
-            monitorEmail: monitorEmail,
-            date: date,
-            time: time,
-        });
+        setErrors({});
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch("/api/submissions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(result.data),
+            });
+
+            // res.ok is true for any 2xx status
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                setErrors(
+                    data?.errors ?? {
+                        form: ["Something went wrong. Please try again."],
+                    },
+                );
+                return;
+            }
+
+            setIsSubmitted(true);
+        } catch {
+            setErrors({ form: ["Failed to connect to the server."] });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -114,109 +184,219 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                 </p>
             </div>
 
-            <form onSubmit={submit}>
+            <form noValidate onSubmit={submit}>
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="monitor-name" required>
-                            MONITOR NAME
+                            Monitor name
                         </FieldLabel>
                         <Input
                             id="monitor-name"
+                            name="monitorName"
+                            autoComplete="name"
                             placeholder="Enter your name"
                             value={monitorName}
-                            aria-invalid={!!nameError}
+                            aria-invalid={!!errors.monitorName}
                             onChange={(e) => setMonitorName(e.target.value)}
                         />
-                        {nameError && <FieldError>{nameError}</FieldError>}
+                        {errors.monitorName && (
+                            <FieldError>{errors.monitorName[0]}</FieldError>
+                        )}
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="monitor-email" required>
-                            MONITOR EMAIL
+                            Monitor email
                         </FieldLabel>
                         <Input
                             id="monitor-email"
+                            name="monitorEmail"
+                            autoComplete="email"
                             type="email"
                             placeholder="Enter Email Address"
                             value={monitorEmail}
-                            aria-invalid={!!emailError}
+                            aria-invalid={!!errors.monitorEmail}
                             onChange={(e) => setMonitorEmail(e.target.value)}
                         />
-                        {emailError && <FieldError>{emailError}</FieldError>}
+                        {errors.monitorEmail && (
+                            <FieldError>{errors.monitorEmail[0]}</FieldError>
+                        )}
                     </Field>
                     <SiteSelect
                         value={site}
                         onChange={setSite}
-                        error={siteError}
+                        error={errors.siteId?.[0] ?? ""}
                     />
                     <div className="flex gap-4">
                         <Field>
                             <FieldLabel htmlFor="date" required>
-                                DATE
+                                Date
                             </FieldLabel>
-                            <Input
-                                id="date"
-                                type="date"
-                                value={date}
-                                aria-invalid={!!dateError}
-                                onChange={(e) => setDate(e.target.value)}
-                            />
-                            {dateError && <FieldError>{dateError}</FieldError>}
+                            <Popover open={dateOpen} onOpenChange={setDateOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        id="date"
+                                        type="button"
+                                        variant="outline"
+                                        aria-invalid={!!errors.date}
+                                        className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
+                                    >
+                                        {format(selectedDate, "MM/dd/yyyy")}
+                                        <CalendarIcon data-icon="inline-end" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                >
+                                    <Calendar
+                                        mode="single"
+                                        required
+                                        autoFocus
+                                        selected={selectedDate}
+                                        onSelect={(day) => {
+                                            setDate(format(day, "yyyy-MM-dd"));
+                                            setDateOpen(false);
+                                        }}
+                                        defaultMonth={selectedDate}
+                                        today={today}
+                                        endMonth={today}
+                                        disabled={{ after: today }}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            {errors.date && (
+                                <FieldError>{errors.date[0]}</FieldError>
+                            )}
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="time" required>
-                                TIME
+                                Time
                             </FieldLabel>
-                            <Input
-                                id="time"
-                                type="time"
-                                value={time}
-                                aria-invalid={!!timeError}
-                                onChange={(e) => setTime(e.target.value)}
-                            />
-                            {timeError && <FieldError>{timeError}</FieldError>}
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        id="time"
+                                        type="button"
+                                        variant="outline"
+                                        aria-invalid={!!errors.time}
+                                        className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
+                                    >
+                                        {hour}:{minute} {period}
+                                        <ChevronDownIcon />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                    // Scroll each column to its value and focus the selected hour.
+                                    onOpenAutoFocus={(event) => {
+                                        event.preventDefault();
+                                        const selected = (
+                                            event.currentTarget as HTMLElement
+                                        ).querySelectorAll<HTMLElement>(
+                                            '[data-selected="true"]',
+                                        );
+                                        selected.forEach((el) =>
+                                            el.scrollIntoView({
+                                                block: "center",
+                                            }),
+                                        );
+                                        selected[0]?.focus();
+                                    }}
+                                >
+                                    <div className="flex">
+                                        <TimeColumn
+                                            label="Hour"
+                                            values={HOURS}
+                                            selected={hour}
+                                            onPick={(h) =>
+                                                setTimeParts(h, minute, period)
+                                            }
+                                            divider
+                                        />
+                                        <TimeColumn
+                                            label="Minute"
+                                            values={MINUTES}
+                                            selected={minute}
+                                            onPick={(m) =>
+                                                setTimeParts(hour, m, period)
+                                            }
+                                            divider
+                                        />
+                                        <TimeColumn
+                                            label="AM or PM"
+                                            values={["AM", "PM"]}
+                                            selected={period}
+                                            onPick={(p) =>
+                                                setTimeParts(hour, minute, p)
+                                            }
+                                        />
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                            {errors.time && (
+                                <FieldError>{errors.time[0]}</FieldError>
+                            )}
                         </Field>
                     </div>
                     <Field>
                         <FieldLabel htmlFor="gage-height" required>
-                            GAGE HEIGHT (ft)
+                            Gage height (ft)
                         </FieldLabel>
 
                         <Input
                             id="gage-height"
+                            name="gageHeightFt"
                             type="number"
                             step="0.01"
                             placeholder="e.g. 4.82"
-                            value={gageHeight}
-                            aria-invalid={!!gageError}
-                            onChange={(e) => setGageHeight(e.target.value)}
+                            value={gageHeightFt}
+                            aria-invalid={!!errors.gageHeightFt}
+                            onChange={(e) => setGageHeightFt(e.target.value)}
                         />
-                        {gageError && <FieldError>{gageError}</FieldError>}
+                        {errors.gageHeightFt && (
+                            <FieldError>{errors.gageHeightFt[0]}</FieldError>
+                        )}
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="weather-select">
-                            WEATHER (OPTIONAL)
+                            Weather (optional)
                         </FieldLabel>
-                        <NativeSelect
-                            id="weather-select"
+                        <Select
                             value={weather}
-                            onChange={(e) => setWeather(e.target.value)}
+                            onValueChange={(v) =>
+                                setWeather(v === "none" ? "" : (v ?? ""))
+                            }
                         >
-                            <option value="">Select weather</option>
-                            <option value="Sunny">Sunny</option>
-                            <option value="Partly cloudy">Partly cloudy</option>
-                            <option value="Overcast">Overcast</option>
-                            <option value="Light rain">Light rain</option>
-                            <option value="Heavy rain">Heavy rain</option>
-                            <option value="Snow">Snow</option>
-                            <option value="Other">Other</option>
-                        </NativeSelect>
+                            <SelectTrigger id="weather-select">
+                                <SelectValue placeholder="Select weather" />
+                            </SelectTrigger>
+                            <SelectContent position="popper">
+                                <SelectItem value="none">None</SelectItem>
+                                <SelectItem value="Sunny">Sunny</SelectItem>
+                                <SelectItem value="Partly cloudy">
+                                    Partly cloudy
+                                </SelectItem>
+                                <SelectItem value="Overcast">
+                                    Overcast
+                                </SelectItem>
+                                <SelectItem value="Light rain">
+                                    Light rain
+                                </SelectItem>
+                                <SelectItem value="Heavy rain">
+                                    Heavy rain
+                                </SelectItem>
+                                <SelectItem value="Snow">Snow</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="conditions">
-                            STREAM CONDITIONS & OBSERVATIONS (OPTIONAL)
+                            Stream conditions & observations (optional)
                         </FieldLabel>
                         <Textarea
                             id="conditions"
+                            name="conditions"
                             rows={4}
                             value={conditions}
                             placeholder="Add context about stream conditions"
@@ -226,37 +406,32 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                     <Field>
                         <FieldLabel htmlFor="notes">
-                            NOTES (OPTIONAL)
+                            Notes (optional)
                         </FieldLabel>
                         <Input
                             id="notes"
+                            name="notes"
                             placeholder="Add context about the reading"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />
                     </Field>
                     <PhotoUpload value={photo} onChange={setPhoto} />
-                    <Button type="submit" size="lg" className="mx-auto w-39">
+                    {errors.form && <FieldError>{errors.form[0]}</FieldError>}
+                    <Button
+                        type="submit"
+                        size="lg"
+                        className="mx-auto w-39"
+                        disabled={isSubmitting}
+                    >
                         Submit
                     </Button>
                 </div>
             </form>
-            {submission && (
-                <div className="text-body">
-                    <p>Monitor Name: {submission.monitorName}</p>
-                    <p>Monitor Email: {submission.monitorEmail}</p>
-                    <p>
-                        Site Name:{" "}
-                        {SITES.find((s) => s.id === submission.siteId)?.name}
-                    </p>
-                    <p>Date: {submission.date}</p>
-                    <p>Time: {submission.time}</p>
-                    <p>Gage Height: {submission.gageHeight}</p>
-                    <p>Weather: {submission.weather}</p>
-                    <p>Stream Conditions: {submission.conditions}</p>
-                    <p>Notes: {submission.notes}</p>
-                    <p>Photo file: {submission.photo?.name}</p>
-                </div>
+            {isSubmitted && (
+                <p role="status" className="text-body">
+                    Thanks! Your measurement was submitted
+                </p>
             )}
         </FormCard>
     );
