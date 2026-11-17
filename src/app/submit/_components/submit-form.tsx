@@ -191,7 +191,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                         <Input
                             id="gage-height"
-                            name="gageHeight"
+                            name="gageHeightFt"
                             type="number"
                             step="0.01"
                             placeholder="e.g. 4.82"
@@ -249,11 +249,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         />
                     </Field>
                     <PhotoUpload value={photo} onChange={setPhoto} />
-                    {errors.form && (
-                        <p className="text-body text-destructive">
-                            {errors.form[0]}
-                        </p>
-                    )}
+                    {errors.form && <FieldError>{errors.form[0]}</FieldError>}
                     <Button
                         type="submit"
                         size="lg"
@@ -265,7 +261,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                 </div>
             </form>
             {isSubmitted && (
-                <p className="text-body">
+                <p role="status" className="text-body">
                     Thanks! Your measurement was submitted
                 </p>
             )}

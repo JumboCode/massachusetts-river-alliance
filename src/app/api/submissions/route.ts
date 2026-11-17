@@ -25,8 +25,14 @@ export async function POST(request: Request) {
     const result = submissionSchema.safeParse(bodyResult);
 
     if (!result.success) {
+        // formErrors covers bodies that aren't an object, like [] or "hello".
+        const { formErrors, fieldErrors } = z.flattenError(result.error);
         return Response.json(
-            { errors: z.flattenError(result.error).fieldErrors },
+            {
+                errors: formErrors.length
+                    ? { form: ["Invalid request"] }
+                    : fieldErrors,
+            },
             { status: 400 },
         );
     }

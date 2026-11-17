@@ -40,13 +40,11 @@ export default function ForgotPasswordPage() {
 }
 
 function ForgotPasswordForm() {
-    // Use states
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
     const [sent, setSent] = useState(false);
 
     function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-        // check email, set error or set sent
         e.preventDefault();
 
         const result = forgotPasswordSchema.safeParse({ email });
