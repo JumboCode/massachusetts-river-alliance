@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { SITES } from "@/lib/sites";
 import Image from "next/image";
 import { format, parse } from "date-fns";
 import { CalendarIcon, ChevronDownIcon } from "lucide-react";
@@ -39,18 +38,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-type Measurement = {
-    monitorName: string;
-    monitorEmail: string;
-    siteId: string;
-    date: string;
-    time: string;
-    gageHeight: number;
-    weather: string;
-    conditions: string;
-    notes: string;
-    photo: File | null;
-};
+import { z } from "zod";
+import { submissionSchema } from "@/lib/arcgis/schemas";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const HOURS = Array.from({ length: 12 }, (_, i) => pad(i === 0 ? 12 : i));
@@ -99,17 +88,13 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
     const [time, setTime] = useState(now.time);
     const [site, setSite] = useState("");
     const [photo, setPhoto] = useState<File | null>(null);
-    const [gageHeight, setGageHeight] = useState("");
+    const [gageHeightFt, setGageHeightFt] = useState("");
     const [weather, setWeather] = useState("");
     const [conditions, setConditions] = useState("");
     const [notes, setNotes] = useState("");
-    const [submission, setSubmission] = useState<Measurement | null>(null);
-    const [siteError, setSiteError] = useState("");
-    const [gageError, setGageError] = useState("");
-    const [timeError, setTimeError] = useState("");
-    const [dateError, setDateError] = useState("");
-    const [nameError, setNameError] = useState("");
-    const [emailError, setEmailError] = useState("");
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
     const [dateOpen, setDateOpen] = useState(false);
     const today = parse(now.date, "yyyy-MM-dd", new Date());
     const selectedDate = parse(date, "yyyy-MM-dd", new Date());
@@ -121,44 +106,55 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
     const setTimeParts = (h: string, m: string, p: string) =>
         setTime(`${pad((Number(h) % 12) + (p === "PM" ? 12 : 0))}:${m}`);
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const nameMissing = monitorName === "";
-        const emailMissing = monitorEmail === "";
-        const dateMissing = date === "";
-        const timeMissing = time === "";
-        const siteMissing = site === "";
-        const gageMissing = gageHeight === "";
-        setNameError(nameMissing ? "This field is required" : "");
-        setEmailError(emailMissing ? "This field is required" : "");
-        setDateError(dateMissing ? "This field is required" : "");
-        setTimeError(timeMissing ? "This field is required" : "");
-        setSiteError(siteMissing ? "This field is required" : "");
-        setGageError(gageMissing ? "This field is required" : "");
-        if (
-            siteMissing ||
-            gageMissing ||
-            nameMissing ||
-            emailMissing ||
-            dateMissing ||
-            timeMissing
-        ) {
-            setSubmission(null);
+        setIsSubmitted(false);
+
+        const result = submissionSchema.safeParse({
+            siteId: site,
+            gageHeightFt:
+                gageHeightFt === "" ? undefined : Number(gageHeightFt),
+            date,
+            time,
+            monitorName,
+            monitorEmail,
+            weather,
+            conditions,
+            notes,
+        });
+
+        if (!result.success) {
+            setErrors(z.flattenError(result.error).fieldErrors);
             return;
         }
 
-        setSubmission({
-            siteId: site,
-            gageHeight: Number(gageHeight),
-            weather: weather,
-            conditions: conditions,
-            notes: notes,
-            photo: photo,
-            monitorName: monitorName,
-            monitorEmail: monitorEmail,
-            date: date,
-            time: time,
-        });
+        setErrors({});
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch("/api/submissions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(result.data),
+            });
+
+            // res.ok is true for any 2xx status
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                setErrors(
+                    data?.errors ?? {
+                        form: ["Something went wrong. Please try again."],
+                    },
+                );
+                return;
+            }
+
+            setIsSubmitted(true);
+        } catch {
+            setErrors({ form: ["Failed to connect to the server."] });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -179,7 +175,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                 </p>
             </div>
 
-            <form onSubmit={submit}>
+            <form noValidate onSubmit={submit}>
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="monitor-name" required>
@@ -187,12 +183,16 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="monitor-name"
+                            name="monitorName"
+                            autoComplete="name"
                             placeholder="Enter your name"
                             value={monitorName}
-                            aria-invalid={!!nameError}
+                            aria-invalid={!!errors.monitorName}
                             onChange={(e) => setMonitorName(e.target.value)}
                         />
-                        {nameError && <FieldError>{nameError}</FieldError>}
+                        {errors.monitorName && (
+                            <FieldError>{errors.monitorName[0]}</FieldError>
+                        )}
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="monitor-email" required>
@@ -200,18 +200,22 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="monitor-email"
+                            name="monitorEmail"
+                            autoComplete="email"
                             type="email"
                             placeholder="Enter Email Address"
                             value={monitorEmail}
-                            aria-invalid={!!emailError}
+                            aria-invalid={!!errors.monitorEmail}
                             onChange={(e) => setMonitorEmail(e.target.value)}
                         />
-                        {emailError && <FieldError>{emailError}</FieldError>}
+                        {errors.monitorEmail && (
+                            <FieldError>{errors.monitorEmail[0]}</FieldError>
+                        )}
                     </Field>
                     <SiteSelect
                         value={site}
                         onChange={setSite}
-                        error={siteError}
+                        error={errors.siteId?.[0] ?? ""}
                     />
                     <div className="flex gap-4">
                         <Field>
@@ -224,7 +228,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                         id="date"
                                         type="button"
                                         variant="outline"
-                                        aria-invalid={!!dateError}
+                                        aria-invalid={!!errors.date}
                                         className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
                                     >
                                         {format(selectedDate, "MM/dd/yyyy")}
@@ -250,7 +254,9 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                     />
                                 </PopoverContent>
                             </Popover>
-                            {dateError && <FieldError>{dateError}</FieldError>}
+                            {errors.date && (
+                                <FieldError>{errors.date[0]}</FieldError>
+                            )}
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="time" required>
@@ -262,7 +268,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                         id="time"
                                         type="button"
                                         variant="outline"
-                                        aria-invalid={!!timeError}
+                                        aria-invalid={!!errors.time}
                                         className="h-9 w-full justify-between rounded-control border-input bg-card px-3.5 py-1 text-mobile-input font-normal text-foreground md:text-body"
                                     >
                                         {hour}:{minute} {period}
@@ -311,7 +317,9 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                                     </div>
                                 </PopoverContent>
                             </Popover>
-                            {timeError && <FieldError>{timeError}</FieldError>}
+                            {errors.time && (
+                                <FieldError>{errors.time[0]}</FieldError>
+                            )}
                         </Field>
                     </div>
                     <Field>
@@ -321,14 +329,17 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                         <Input
                             id="gage-height"
+                            name="gageHeightFt"
                             type="number"
                             step="0.01"
                             placeholder="e.g. 4.82"
-                            value={gageHeight}
-                            aria-invalid={!!gageError}
-                            onChange={(e) => setGageHeight(e.target.value)}
+                            value={gageHeightFt}
+                            aria-invalid={!!errors.gageHeightFt}
+                            onChange={(e) => setGageHeightFt(e.target.value)}
                         />
-                        {gageError && <FieldError>{gageError}</FieldError>}
+                        {errors.gageHeightFt && (
+                            <FieldError>{errors.gageHeightFt[0]}</FieldError>
+                        )}
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="weather-select">
@@ -368,6 +379,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Textarea
                             id="conditions"
+                            name="conditions"
                             rows={4}
                             value={conditions}
                             placeholder="Add context about stream conditions"
@@ -381,33 +393,28 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </FieldLabel>
                         <Input
                             id="notes"
+                            name="notes"
                             placeholder="Add context about the reading"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />
                     </Field>
                     <PhotoUpload value={photo} onChange={setPhoto} />
-                    <Button type="submit" size="lg" className="mx-auto w-39">
+                    {errors.form && <FieldError>{errors.form[0]}</FieldError>}
+                    <Button
+                        type="submit"
+                        size="lg"
+                        className="mx-auto w-39"
+                        disabled={isSubmitting}
+                    >
                         Submit
                     </Button>
                 </div>
             </form>
-            {submission && (
-                <div className="text-body">
-                    <p>Monitor Name: {submission.monitorName}</p>
-                    <p>Monitor Email: {submission.monitorEmail}</p>
-                    <p>
-                        Site Name:{" "}
-                        {SITES.find((s) => s.id === submission.siteId)?.name}
-                    </p>
-                    <p>Date: {submission.date}</p>
-                    <p>Time: {submission.time}</p>
-                    <p>Gage Height: {submission.gageHeight}</p>
-                    <p>Weather: {submission.weather}</p>
-                    <p>Stream Conditions: {submission.conditions}</p>
-                    <p>Notes: {submission.notes}</p>
-                    <p>Photo file: {submission.photo?.name}</p>
-                </div>
+            {isSubmitted && (
+                <p role="status" className="text-body">
+                    Thanks! Your measurement was submitted
+                </p>
             )}
         </FormCard>
     );
