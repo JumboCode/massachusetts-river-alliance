@@ -9,6 +9,8 @@
  *           Date: 10/18/2026
  *      Edited by: Michele
  *           Date: 10/20/2026
+ *      Edited by: Michele
+ *           Date: 11/09/2026
  *
  *        Summary: Forgot password page
  *
@@ -16,6 +18,7 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormCard } from "@/components/form-card";
 import { useState } from "react";
 import Image from "next/image";
@@ -32,6 +35,11 @@ const forgotPasswordSchema = z.object({
 });
 
 export default function ForgotPasswordPage() {
+    // Remount the form on each link visit so it starts empty
+    return <ForgotPasswordForm key={useRouter().bfcacheId} />;
+}
+
+function ForgotPasswordForm() {
     // Use states
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
@@ -87,13 +95,15 @@ export default function ForgotPasswordPage() {
             </div>
             <form onSubmit={handleSubmit} noValidate>
                 <Field>
-                    <FieldLabel htmlFor="email" required>
-                        EMAIL
+                    <FieldLabel htmlFor="forgot-password-email" required>
+                        Email
                     </FieldLabel>
 
                     {/* Input box */}
                     <Input
-                        id="email"
+                        id="forgot-password-email"
+                        name="email"
+                        autoComplete="username"
                         type="email"
                         placeholder="Enter Email Address"
                         value={email}
@@ -104,8 +114,7 @@ export default function ForgotPasswordPage() {
                     {/* if error, show the error message in red */}
                     {errors.email && <FieldError>{errors.email[0]}</FieldError>}
                 </Field>
-
-                <div className="mt-6 flex flex-col items-center gap-1">
+                <div className="mt-6 flex flex-col items-center gap-1.25">
                     {/* Submit Button */}
                     <Button type="submit" size="lg">
                         Send Reset Link

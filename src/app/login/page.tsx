@@ -4,6 +4,8 @@
  *
  *         Author: Grant, Tanish
  *           Date: 10/18/2026
+ *      Edited by: Micah
+ *           Date: 11/10/2026
  *
  *        Summary: Admin login page
  *
@@ -11,6 +13,7 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { FormCard } from "@/components/form-card";
@@ -28,6 +31,10 @@ const loginSchema = z.object({
 });
 
 export default function LoginPage() {
+    return <LoginForm key={useRouter().bfcacheId} />;
+}
+
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<Partial<Record<string, string[]>>>({});
@@ -79,6 +86,8 @@ export default function LoginPage() {
                         </FieldLabel>
                         <Input
                             id="email-input"
+                            name="email"
+                            autoComplete="username"
                             value={email}
                             type="email"
                             placeholder="Enter Email Address"
@@ -96,6 +105,8 @@ export default function LoginPage() {
                         </FieldLabel>
                         <Input
                             id="password-input"
+                            name="password"
+                            autoComplete="current-password"
                             value={password}
                             type="password"
                             placeholder="Enter Password"
@@ -107,8 +118,8 @@ export default function LoginPage() {
                         )}
                     </Field>
                     {/* Login button and forgot password link */}
-                    <div className="flex flex-col items-center gap-4">
-                        <Button type="submit" size="lg" className="w-full">
+                    <div className="flex flex-col items-center gap-1.25">
+                        <Button type="submit" size="lg">
                             Login
                         </Button>
 

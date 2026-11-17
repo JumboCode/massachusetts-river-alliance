@@ -114,10 +114,12 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                 <div className="flex flex-col gap-4">
                     <Field>
                         <FieldLabel htmlFor="monitor-name" required>
-                            MONITOR NAME
+                            Monitor name
                         </FieldLabel>
                         <Input
                             id="monitor-name"
+                            name="monitorName"
+                            autoComplete="name"
                             placeholder="Enter your name"
                             value={monitorName}
                             aria-invalid={!!errors.monitorName}
@@ -129,10 +131,12 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="monitor-email" required>
-                            MONITOR EMAIL
+                            Monitor email
                         </FieldLabel>
                         <Input
                             id="monitor-email"
+                            name="monitorEmail"
+                            autoComplete="email"
                             type="email"
                             placeholder="Enter Email Address"
                             value={monitorEmail}
@@ -151,7 +155,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     <div className="flex gap-4">
                         <Field>
                             <FieldLabel htmlFor="date" required>
-                                DATE
+                                Date
                             </FieldLabel>
                             <Input
                                 id="date"
@@ -166,7 +170,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="time" required>
-                                TIME
+                                Time
                             </FieldLabel>
                             <Input
                                 id="time"
@@ -182,11 +186,12 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </div>
                     <Field>
                         <FieldLabel htmlFor="gage-height" required>
-                            GAGE HEIGHT (ft)
+                            Gage height (ft)
                         </FieldLabel>
 
                         <Input
                             id="gage-height"
+                            name="gageHeight"
                             type="number"
                             step="0.01"
                             placeholder="e.g. 4.82"
@@ -200,7 +205,7 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="weather-select">
-                            WEATHER (OPTIONAL)
+                            Weather (optional)
                         </FieldLabel>
                         <NativeSelect
                             id="weather-select"
@@ -219,10 +224,11 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
                     </Field>
                     <Field>
                         <FieldLabel htmlFor="conditions">
-                            STREAM CONDITIONS & OBSERVATIONS (OPTIONAL)
+                            Stream conditions & observations (optional)
                         </FieldLabel>
                         <Textarea
                             id="conditions"
+                            name="conditions"
                             rows={4}
                             value={conditions}
                             placeholder="Add context about stream conditions"
@@ -232,10 +238,11 @@ export function SubmitForm({ now }: { now: { date: string; time: string } }) {
 
                     <Field>
                         <FieldLabel htmlFor="notes">
-                            NOTES (OPTIONAL)
+                            Notes (optional)
                         </FieldLabel>
                         <Input
                             id="notes"
+                            name="notes"
                             placeholder="Add context about the reading"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}

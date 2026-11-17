@@ -77,7 +77,7 @@ export default function ReviewFiltersPage() {
 
             <div className="flex flex-row gap-2">
                 <Field>
-                    <FieldLabel htmlFor="site">SITE</FieldLabel>
+                    <FieldLabel htmlFor="site">Site</FieldLabel>
                     <NativeSelect
                         id="site"
                         value={site}
@@ -92,7 +92,7 @@ export default function ReviewFiltersPage() {
                     </NativeSelect>
                 </Field>
                 <Field>
-                    <FieldLabel htmlFor="date">DATE</FieldLabel>
+                    <FieldLabel htmlFor="date">Date</FieldLabel>
                     <NativeSelect
                         id="date"
                         value={date}
@@ -104,7 +104,7 @@ export default function ReviewFiltersPage() {
                     </NativeSelect>
                 </Field>
                 <Field>
-                    <FieldLabel htmlFor="status">STATUS</FieldLabel>
+                    <FieldLabel htmlFor="status">Status</FieldLabel>
                     <NativeSelect
                         id="status"
                         value={status}
