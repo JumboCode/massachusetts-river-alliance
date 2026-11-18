@@ -20,7 +20,7 @@ import { useState } from "react";
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { ReadingCard } from "./reading-card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ActionBar } from "./bulk-action-bar";
+import { BulkActionBar } from "./bulk-action-bar";
 import { Label } from "@/components/ui/label";
 
 export type Filters = {
@@ -79,7 +79,7 @@ export function ReviewPage({
             <section className="flex w-150.75 shrink-0 flex-col bg-muted pr-2 pb-3">
                 {/* Select all and filters */}
                 <div className="flex h-15.5 shrink-0 items-center justify-between pl-7.5">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2.5">
                         <Checkbox
                             checked={
                                 visible.length > 0 &&
@@ -108,9 +108,9 @@ export function ReviewPage({
                         />
                         <Label
                             htmlFor="select-all"
-                            className="text-body text-muted-foreground"
+                            className="text-ui font-normal text-muted-foreground"
                         >
-                            Select All
+                            Select all
                         </Label>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ export function ReviewPage({
 
                     {/* Bulk action bar */}
                     {checked.length > 0 && (
-                        <ActionBar
+                        <BulkActionBar
                             count={checked.length}
                             onClear={() => setSelectedIds(new Set())}
                             onApprove={() => {

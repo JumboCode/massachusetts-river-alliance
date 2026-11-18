@@ -13,6 +13,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { SITES } from "@/lib/sites";
+import { cn } from "@/lib/utils";
 
 export function ReadingCard({
     reading,
@@ -31,14 +32,18 @@ export function ReadingCard({
 
     return (
         <div
-            className={`flex items-center gap-3 px-6 py-4 transition-colors ${checked ? "my-0.5 rounded-md bg-accent" : "border-b border-border bg-card hover:bg-muted/50"}`}
+            className={cn(
+                "flex items-center gap-3 py-3 pr-3.5 pl-6",
+                checked
+                    ? "rounded-xl bg-accent"
+                    : "border-b border-border bg-card",
+            )}
         >
-            {" "}
             <Checkbox
                 checked={checked}
                 onCheckedChange={onCheckedChange}
-                aria-label={`Select reading: ${siteName}`}
-            ></Checkbox>
+                aria-label={`Select reading: ${siteName}, ${reading.gageHeightFt.toFixed(2)} ft`}
+            />
             <span className="text-body text-foreground">{siteName}</span>
             <span className="ml-auto text-body text-foreground">
                 {reading.gageHeightFt.toFixed(2)} ft

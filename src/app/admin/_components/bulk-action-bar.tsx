@@ -1,6 +1,6 @@
 /***************************************************************
  *
- *        src/app/admin/_components/reading-card.tsx
+ *        src/app/admin/_components/bulk-action-bar.tsx
  *
  *         Author: Grant, Will
  *           Date: 11/15/2026
@@ -13,7 +13,7 @@
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
-export function ActionBar({
+export function BulkActionBar({
     count,
     onApprove,
     onReject,
@@ -25,22 +25,24 @@ export function ActionBar({
     onClear: () => void;
 }) {
     return (
-        <div className="mx-1 mb-1 flex shrink-0 items-center justify-between gap-3 rounded-md bg-warning-foreground px-3 py-2">
-            <div className="flex gap-3 items-center">
+        <div className="sticky bottom-0 flex shrink-0 items-center justify-between rounded-xl bg-warning p-2">
+            <div className="flex items-center gap-2.5">
                 <Button
                     onClick={onClear}
+                    size="icon-sm"
                     aria-label="Clear selection"
-                    className="size-7 rounded-full bg-card/60 text-muted-foreground hover:bg-card hover:text-foreground"
+                    className="size-7 rounded-full border-background bg-background text-foreground hover:bg-background"
                 >
-                    <X className="size-4" />
+                    <X className="size-4" strokeWidth={2.625} />
                 </Button>
 
-                <p className="text-body text-foreground">{count} selected</p>
+                <p className="text-ui text-foreground">{count} selected</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2.5">
                 <Button
                     onClick={onApprove}
-                    className="h-8 w-28 bg-success-foreground font-semibold tracking-wider text-background"
+                    variant="approve"
+                    className="h-7.5 w-27.5 text-body font-medium"
                 >
                     Approve
                 </Button>
@@ -48,7 +50,7 @@ export function ActionBar({
                 <Button
                     onClick={onReject}
                     variant="destructive"
-                    className="h-8 w-28 bg-destructive font-semibold tracking-wider text-background"
+                    className="h-7.5 w-27.5 text-body font-medium"
                 >
                     Reject
                 </Button>
