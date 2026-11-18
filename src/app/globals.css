@@ -34,9 +34,12 @@
     --color-muted-foreground: var(--muted-foreground);
     --color-label-foreground: var(--label-foreground);
     --color-success: var(--success);
+    --color-approve: var(--approve);
     --color-success-foreground: var(--success-foreground);
     --color-warning: var(--warning);
     --color-warning-foreground: var(--warning-foreground);
+    --color-danger: var(--danger);
+    --color-danger-foreground: var(--danger-foreground);
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);

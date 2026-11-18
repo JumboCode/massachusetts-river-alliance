@@ -14,11 +14,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-    "group/badge inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-input px-3.5 text-label whitespace-nowrap uppercase transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&>svg]:pointer-events-none [&>svg]:size-3!",
+    "group/badge inline-flex h-7 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-xl px-2.5 text-ui whitespace-nowrap transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 has-data-[icon=inline-end]:pr-2 [&>svg]:pointer-events-none [&>svg]:size-3!",
     {
         variants: {
             variant: {
-                destructive: "bg-card text-destructive",
+                destructive: "bg-danger text-danger-foreground",
                 success: "bg-success text-success-foreground",
                 warning: "bg-warning text-warning-foreground",
             },

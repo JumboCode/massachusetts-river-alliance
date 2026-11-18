@@ -20,11 +20,13 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-primary text-primary-foreground hover:bg-primary-hover aria-expanded:bg-primary-hover",
+                    "border-primary bg-primary text-primary-foreground hover:border-primary-hover hover:bg-primary-hover aria-expanded:border-primary-hover aria-expanded:bg-primary-hover",
                 outline:
                     "border-input bg-card text-foreground hover:bg-accent aria-expanded:bg-accent",
+                approve:
+                    "border-approve bg-approve text-foreground hover:border-approve/90 hover:bg-approve/90",
                 destructive:
-                    "border-input bg-card text-destructive hover:bg-destructive/10 focus-visible:border-destructive focus-visible:ring-destructive/20",
+                    "border-destructive bg-destructive text-foreground hover:border-destructive/90 hover:bg-destructive/90 focus-visible:border-destructive focus-visible:ring-destructive/20",
             },
             size: {
                 "default": "h-9 px-4 text-meta font-semibold",
