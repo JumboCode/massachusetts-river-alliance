@@ -21,6 +21,7 @@ import type { Reading, Status } from "@/lib/arcgis/schemas";
 import { ReadingCard } from "./reading-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ActionBar } from "./bulk-action-bar";
+import { Label } from "@/components/ui/label";
 
 export type Filters = {
     siteId: string;
@@ -68,6 +69,7 @@ export function ReviewPage({
     const visible = readings.filter(
         (r) => status === "all" || r.status === status,
     );
+    const checked = visible.filter((r) => selectedIds.has(r.id));
 
     return (
         <main className="flex min-h-0 flex-1">
@@ -86,12 +88,12 @@ export function ReviewPage({
                                   ? "indeterminate"
                                   : false
                         }
-                        onCheckedChange={(checked) => {
+                        onCheckedChange={(isChecked) => {
                             setSelectedIds((prevIds) => {
                                 const newIds = new Set(prevIds);
 
                                 visible.forEach((r) => {
-                                    if (checked) {
+                                    if (isChecked) {
                                         newIds.add(r.id);
                                     } else {
                                         newIds.delete(r.id);
@@ -101,10 +103,14 @@ export function ReviewPage({
                                 return newIds;
                             });
                         }}
+                        id="select-all"
                     />
-                    <p className="text-body text-muted-foreground">
+                    <Label
+                        htmlFor="select-all"
+                        className="text-body text-muted-foreground"
+                    >
                         Select All
-                    </p>
+                    </Label>
                 </div>
                 <div className="border-b border-border px-6 py-4"></div>
 
@@ -146,19 +152,25 @@ export function ReviewPage({
                 </ul>
 
                 {/* Bulk action bar */}
-                {selectedIds.size > 0 && (
+                {checked.length > 0 && (
                     <ActionBar
-                        count={selectedIds.size}
+                        count={checked.length}
                         onClear={() => setSelectedIds(new Set())}
                         onApprove={() => {
-                            updateStatus([...selectedIds], "approved");
+                            updateStatus(
+                                checked.map((r) => r.id),
+                                "approved",
+                            );
                             setSelectedIds(new Set());
                         }}
                         onReject={() => {
-                            updateStatus([...selectedIds], "rejected");
+                            updateStatus(
+                                checked.map((r) => r.id),
+                                "rejected",
+                            );
                             setSelectedIds(new Set());
                         }}
-                    ></ActionBar>
+                    />
                 )}
             </section>
 

@@ -37,6 +37,7 @@ export function ReadingCard({
             <Checkbox
                 checked={checked}
                 onCheckedChange={onCheckedChange}
+                aria-label={`Select reading: ${reading.siteId}`}
             ></Checkbox>
             <span className="text-body text-foreground">{siteName}</span>
             <span className="ml-auto text-body text-foreground">
