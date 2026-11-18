@@ -74,104 +74,108 @@ export function ReviewPage({
     return (
         <main className="flex min-h-0 flex-1">
             {/* Sidebar */}
-            <aside className="w-51 shrink-0 border-r border-border"></aside>
+            <aside className="w-60.5 shrink-0 bg-muted"></aside>
 
-            <section className="flex w-148.5 shrink-0 flex-col border-r border-border">
+            <section className="flex w-150.75 shrink-0 flex-col bg-muted pr-2 pb-3">
                 {/* Select all and filters */}
-                <div className="flex h-16 shrink-0 items-center gap-4 border-b border-border pr-2 pl-6">
-                    <Checkbox
-                        checked={
-                            visible.length > 0 &&
-                            visible.every((r) => selectedIds.has(r.id))
-                                ? true
-                                : visible.some((r) => selectedIds.has(r.id))
-                                  ? "indeterminate"
-                                  : false
-                        }
-                        onCheckedChange={(isChecked) => {
-                            setSelectedIds((prevIds) => {
-                                const newIds = new Set(prevIds);
+                <div className="flex h-15.5 shrink-0 items-center justify-between pl-7.5">
+                    <div className="flex items-center gap-4">
+                        <Checkbox
+                            checked={
+                                visible.length > 0 &&
+                                visible.every((r) => selectedIds.has(r.id))
+                                    ? true
+                                    : visible.some((r) => selectedIds.has(r.id))
+                                      ? "indeterminate"
+                                      : false
+                            }
+                            onCheckedChange={(isChecked) => {
+                                setSelectedIds((prevIds) => {
+                                    const newIds = new Set(prevIds);
 
-                                visible.forEach((r) => {
-                                    if (isChecked) {
-                                        newIds.add(r.id);
-                                    } else {
-                                        newIds.delete(r.id);
-                                    }
+                                    visible.forEach((r) => {
+                                        if (isChecked) {
+                                            newIds.add(r.id);
+                                        } else {
+                                            newIds.delete(r.id);
+                                        }
+                                    });
+
+                                    return newIds;
                                 });
-
-                                return newIds;
-                            });
-                        }}
-                        id="select-all"
-                    />
-                    <Label
-                        htmlFor="select-all"
-                        className="text-body text-muted-foreground"
-                    >
-                        Select All
-                    </Label>
+                            }}
+                            id="select-all"
+                        />
+                        <Label
+                            htmlFor="select-all"
+                            className="text-body text-muted-foreground"
+                        >
+                            Select All
+                        </Label>
+                    </div>
                 </div>
-                <div className="border-b border-border px-6 py-4"></div>
 
-                <ul className="flex flex-1 flex-col">
-                    {visible.map((reading) => (
-                        <li key={reading.id}>
-                            <ReadingCard
-                                reading={reading}
-                                expanded={expandedId === reading.id}
-                                onToggleExpand={() =>
-                                    setExpandedId(
-                                        expandedId === reading.id
-                                            ? null
-                                            : reading.id,
-                                    )
-                                }
-                                checked={selectedIds.has(reading.id)}
-                                onCheckedChange={() => {
-                                    if (selectedIds.has(reading.id)) {
-                                        setSelectedIds((prevIds) => {
-                                            const newIds = new Set(prevIds);
-                                            newIds.delete(reading.id);
-                                            return newIds;
-                                        });
-                                    } else {
-                                        setSelectedIds((prevIds) => {
-                                            const newIds = new Set(prevIds);
-                                            newIds.add(reading.id);
-                                            return newIds;
-                                        });
+                {/* Readings card */}
+                <div className="flex min-h-0 flex-1 flex-col rounded-xl bg-card p-1.5">
+                    <ul className="flex flex-1 flex-col overflow-y-auto">
+                        {visible.map((reading) => (
+                            <li key={reading.id}>
+                                <ReadingCard
+                                    reading={reading}
+                                    expanded={expandedId === reading.id}
+                                    onToggleExpand={() =>
+                                        setExpandedId(
+                                            expandedId === reading.id
+                                                ? null
+                                                : reading.id,
+                                        )
                                     }
-                                }}
-                                onStatusChange={(next) =>
-                                    updateStatus([reading.id], next)
-                                }
-                            />
-                        </li>
-                    ))}
-                </ul>
+                                    checked={selectedIds.has(reading.id)}
+                                    onCheckedChange={() => {
+                                        if (selectedIds.has(reading.id)) {
+                                            setSelectedIds((prevIds) => {
+                                                const newIds = new Set(prevIds);
+                                                newIds.delete(reading.id);
+                                                return newIds;
+                                            });
+                                        } else {
+                                            setSelectedIds((prevIds) => {
+                                                const newIds = new Set(prevIds);
+                                                newIds.add(reading.id);
+                                                return newIds;
+                                            });
+                                        }
+                                    }}
+                                    onStatusChange={(next) =>
+                                        updateStatus([reading.id], next)
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
 
-                {/* Bulk action bar */}
-                {checked.length > 0 && (
-                    <ActionBar
-                        count={checked.length}
-                        onClear={() => setSelectedIds(new Set())}
-                        onApprove={() => {
-                            updateStatus(
-                                checked.map((r) => r.id),
-                                "approved",
-                            );
-                            setSelectedIds(new Set());
-                        }}
-                        onReject={() => {
-                            updateStatus(
-                                checked.map((r) => r.id),
-                                "rejected",
-                            );
-                            setSelectedIds(new Set());
-                        }}
-                    />
-                )}
+                    {/* Bulk action bar */}
+                    {checked.length > 0 && (
+                        <ActionBar
+                            count={checked.length}
+                            onClear={() => setSelectedIds(new Set())}
+                            onApprove={() => {
+                                updateStatus(
+                                    checked.map((r) => r.id),
+                                    "approved",
+                                );
+                                setSelectedIds(new Set());
+                            }}
+                            onReject={() => {
+                                updateStatus(
+                                    checked.map((r) => r.id),
+                                    "rejected",
+                                );
+                                setSelectedIds(new Set());
+                            }}
+                        />
+                    )}
+                </div>
             </section>
 
             {/* Map */}
