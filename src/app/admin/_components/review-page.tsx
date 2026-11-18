@@ -68,36 +68,39 @@ export function ReviewPage({
     return (
         <main className="flex min-h-0 flex-1">
             {/* Sidebar */}
-            <aside className="w-51 shrink-0 border-r border-border"></aside>
+            <aside className="w-60.5 shrink-0 bg-muted"></aside>
 
-            <section className="flex w-148.5 shrink-0 flex-col border-r border-border">
+            <section className="flex w-150.75 shrink-0 flex-col bg-muted pr-2 pb-3">
                 {/* Select all and filters */}
-                <div className="border-b border-border px-6 py-4"></div>
+                <div className="flex h-15.5 shrink-0 items-center justify-between pl-7.5"></div>
 
-                <ul className="flex flex-1 flex-col">
-                    {visible.map((reading) => (
-                        <li key={reading.id}>
-                            <ReadingCard
-                                reading={reading}
-                                expanded={expandedId === reading.id}
-                                onToggleExpand={() =>
-                                    setExpandedId(
-                                        expandedId === reading.id
-                                            ? null
-                                            : reading.id,
-                                    )
-                                }
-                                checked={selectedIds.has(reading.id)}
-                                onCheckedChange={() => {}}
-                                onStatusChange={(next) =>
-                                    updateStatus([reading.id], next)
-                                }
-                            />
-                        </li>
-                    ))}
-                </ul>
+                {/* Readings card */}
+                <div className="flex min-h-0 flex-1 flex-col rounded-xl bg-card p-1.5">
+                    <ul className="flex flex-1 flex-col overflow-y-auto">
+                        {visible.map((reading) => (
+                            <li key={reading.id}>
+                                <ReadingCard
+                                    reading={reading}
+                                    expanded={expandedId === reading.id}
+                                    onToggleExpand={() =>
+                                        setExpandedId(
+                                            expandedId === reading.id
+                                                ? null
+                                                : reading.id,
+                                        )
+                                    }
+                                    checked={selectedIds.has(reading.id)}
+                                    onCheckedChange={() => {}}
+                                    onStatusChange={(next) =>
+                                        updateStatus([reading.id], next)
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
 
-                {/* Bulk action bar */}
+                    {/* Bulk action bar */}
+                </div>
             </section>
 
             {/* Map */}
