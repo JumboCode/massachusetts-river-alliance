@@ -21,68 +21,37 @@ export function ReviewSidebar({
     counts: Record<Status | "all", number>;
     onStatusChange: (status: Status | "all") => void;
 }) {
+    const statusOptions: [Status | "all", string][] = [
+        ["pending", "Pending review"],
+        ["approved", "Approved history"],
+        ["rejected", "Rejected"],
+        ["all", "All readings"],
+    ];
     return (
         <nav className="flex flex-col p-4">
-            <p className="mb-6 text-muted-foreground text-field-label">
-                {" "}
+            <p
+                className="mb-6 text-muted-foreground text-field-label
+            "
+            >
                 READING STATUS
             </p>
             <div className="flex flex-col gap-2">
-                <Button
-                    variant="ghost"
-                    aria-current={status === "pending" ? "page" : undefined}
-                    className={
-                        status === "pending"
-                            ? "justify-between bg-accent bg-primary text-body"
-                            : "justify-between text-body"
-                    }
-                    onClick={() => onStatusChange("pending")}
-                >
-                    Pending review
-                    <span>{counts.pending}</span>
-                </Button>
-
-                <Button
-                    variant="ghost"
-                    aria-current={status === "approved" ? "page" : undefined}
-                    className={
-                        status === "approved"
-                            ? "justify-between bg-accent bg-primary text-body"
-                            : "justify-between text-body"
-                    }
-                    onClick={() => onStatusChange("approved")}
-                >
-                    Approved
-                    <span>{counts.approved}</span>
-                </Button>
-
-                <Button
-                    variant="ghost"
-                    aria-current={status === "rejected" ? "page" : undefined}
-                    className={
-                        status === "rejected"
-                            ? "justify-between bg-accent bg-primary text-body"
-                            : "justify-between text-body"
-                    }
-                    onClick={() => onStatusChange("rejected")}
-                >
-                    Rejected
-                    <span>{counts.rejected}</span>
-                </Button>
-
-                <Button
-                    variant="ghost"
-                    aria-current={status === "all" ? "page" : undefined}
-                    className={
-                        status === "all"
-                            ? "justify-between bg-accent bg-primary text-body"
-                            : "justify-between text-body"
-                    }
-                    onClick={() => onStatusChange("all")}
-                >
-                    All readings
-                    <span>{counts.all}</span>
-                </Button>
+                {statusOptions.map(([value, label]) => (
+                    <Button
+                        key={value}
+                        variant="ghost"
+                        aria-current={status === value ? "page" : undefined}
+                        className={
+                            status === value
+                                ? "justify-between text-body bg-accent"
+                                : "justify-between text-body"
+                        }
+                        onClick={() => onStatusChange(value)}
+                    >
+                        {label}
+                        <span>{counts[value]}</span>
+                    </Button>
+                ))}
             </div>
         </nav>
     );
